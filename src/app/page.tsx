@@ -1,331 +1,245 @@
-'use client';
+import Link from "next/link";
+import Image from "next/image";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { 
-  ArrowRight, ShieldCheck, CheckCircle2, MessageCircle, 
-  Factory, Globe2, Truck 
-} from 'lucide-react';
+export default function Home() {
+  const products = [
+    {
+      title: "Groundnut Kernels & Blanched Peanuts",
+      specs: "Bold & Java varieties, Counts: 38/42, 40/50, 50/60, Aflatoxin <4 ppb certified",
+      origin: "Tamil Nadu & Andhra Belts",
+      href: "/products",
+    },
+    {
+      title: "Horticultural Low EC Coco Peat Blocks",
+      specs: "5 kg blocks, Washed Low EC < 0.5 mS/cm, Expansion 75-80L, Moisture < 15%",
+      origin: "Pollachi & Western Tamil Nadu",
+      href: "/products",
+    },
+    {
+      title: "Crude & Refined Agro Oils",
+      specs: "Cold-pressed Sesame, Groundnut, and Castor oil batches with FFA < 1.5%",
+      origin: "Southern Indian Mills",
+      href: "/products",
+    },
+    {
+      title: "Whole & Ground Indian Spices",
+      specs: "Turmeric fingers (Curcumin 3.5%+), Red Chilli (Stem/Stemless), Coriander seeds",
+      origin: "Erode & Guntur Hubs",
+      href: "/products",
+    },
+  ];
 
-interface Commodity {
-  id: string;
-  name: string;
-  category: string;
-  image: string;
-  tag: string;
-  grades: string;
-  keyMetric: { label: string; value: string };
-  description: string;
-  quoteSlug: string;
-}
-
-const COMMODITIES: Commodity[] = [
-  {
-    id: 'peanuts',
-    name: 'Indian Groundnuts (Peanuts)',
-    category: 'Oilseeds & Kernels',
-    // High-resolution clean sorted raw peanut kernels
-    image: 'https://images.unsplash.com/photo-1525253086316-d0c936c81468?auto=format&fit=crop&w=1200&q=80',
-    tag: 'Bold & Java Varieties',
-    grades: 'Bold: 38/42, 40/50, 50/60 | Java: 50/60, 60/70',
-    keyMetric: { label: 'Aflatoxin Control', value: '< 4 ppb (EU Ready)' },
-    description: 'Mechanically de-shelled, color-sorted, and gravity-separated raw peanut kernels sourced from certified Saurashtra and South Indian agricultural corridors.',
-    quoteSlug: 'Bold Groundnuts (38/42, 40/50)',
-  },
-  {
-    id: 'cocopeat',
-    name: 'Washed Low EC Coco Peat Blocks',
-    category: 'Horticultural Substrate',
-    // Compressed natural coconut coir pith substrate blocks
-    image: 'https://images.unsplash.com/photo-1585336261026-7787c8816f56?auto=format&fit=crop&w=1200&q=80',
-    tag: '5kg Compressed Blocks',
-    grades: 'Washed Horticultural Grade (Expansion > 15 L/kg)',
-    keyMetric: { label: 'Electrical Cond.', value: '< 0.5 mS/cm' },
-    description: 'Triple-washed coconut coir substrate with minimal salt content, aged and hydraulic compressed for commercial greenhouse soil conditioning and nurseries.',
-    quoteSlug: 'Low EC Coco Peat Blocks (5kg)',
-  },
-  {
-    id: 'desiccated-coconut',
-    name: 'Desiccated Coconut Powder',
-    category: 'Coconut Food Grade',
-    // Fresh granulated dehydrated pure white coconut powder
-    image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80',
-    tag: 'High Fat > 65%',
-    grades: 'Fine & Medium Grade A (Multi-wall Kraft Bags)',
-    keyMetric: { label: 'Moisture Limit', value: '< 3.0% Max' },
-    description: 'Pure white granulated coconut kernel powder, processed under pristine microbiological control. Zero SO2 added, rich in natural dietary fiber and fats.',
-    quoteSlug: 'Desiccated Coconut Powder (High Fat)',
-  },
-  {
-    id: 'vco',
-    name: 'Virgin Coconut Oil (Cold Pressed)',
-    category: 'Edible Oils & Health',
-    // Cold-pressed pure coconut oil
-    image: 'https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&w=1200&q=80',
-    tag: 'Centrifuged Extra Virgin',
-    grades: 'Food & Cosmetic Grade (IBC Totes & Steel Drums)',
-    keyMetric: { label: 'Lauric Acid', value: '> 49% Natural' },
-    description: 'Direct cold centrifugation from fresh coconut milk without chemical solvents or heat treatment. Crystal-clear oil with mild, natural tropical aroma.',
-    quoteSlug: 'Virgin Coconut Oil (Cold Pressed)',
-  },
-];
-
-export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const WHATSAPP_NUMBER = '919962023496';
-
-  const filteredCommodities = selectedCategory === 'all'
-    ? COMMODITIES
-    : COMMODITIES.filter(c => c.id === selectedCategory);
+  const highlights = [
+    {
+      title: "Mill-Direct Procurement",
+      desc: "Eliminate secondary broker layers. We aggregate directly from primary shelling and decortication facilities in local producing clusters.",
+    },
+    {
+      title: "Lab Testing & GAFTA Compliance",
+      desc: "Every batch is presampled in accordance with GAFTA/FOSFA methodologies and submitted to accredited laboratories (SGS, Eurofins) prior to dispatch.",
+    },
+    {
+      title: "End-to-End Export Logistics",
+      desc: "Primary processing, mechanical color sorting, laboratory analysis, and containerized ocean freight handling through Chennai and Tuticorin ports.",
+    },
+  ];
 
   return (
-    <div className="font-sans text-slate-800 bg-white">
-      {/* 1. HERO BANNER */}
-      <section className="relative bg-slate-950 text-white border-b border-slate-800 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950" />
-        
-        <div className="max-w-7xl mx-auto px-6 py-20 sm:py-24 relative z-10">
-          <div className="max-w-3xl space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/80 border border-blue-800/60 text-blue-300 text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+    <main className="min-h-screen bg-slate-50 text-slate-800">
+      {/* Hero Section */}
+      <section className="relative bg-[#050b14] text-white overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20 md:pt-28 md:pb-28">
+          <div className="max-w-4xl">
+            {/* Tagline Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/40 px-3.5 py-1 text-xs font-medium text-blue-300 backdrop-blur-sm mb-6">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
               Sourcing & Export Representation • India
             </div>
 
-            <h1 className="font-heading font-semibold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.1]">
+            {/* Main Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.15]">
               Indian Agricultural Commodities, Sourced with Industrial Precision
             </h1>
 
-            <p className="text-slate-300 text-base sm:text-lg leading-relaxed font-normal max-w-2xl">
+            {/* Subtitle */}
+            <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-3xl leading-relaxed">
               <strong className="text-white font-semibold">GL Global</strong> (GL Exporters Pvt. Ltd.) connects international food manufacturers, oil crushers, and horticultural buyers directly with verified primary processing mills across Southern India.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-3">
+            {/* CTA Buttons */}
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                href="/request-quote"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-7 py-3.5 rounded text-xs uppercase tracking-wider font-semibold flex items-center gap-2 shadow-lg shadow-blue-950 transition-all hover:-translate-y-0.5"
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 rounded-md bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition-all hover:bg-blue-500 hover:shadow-blue-600/50"
               >
-                Request Quotation <ArrowRight className="w-4 h-4" />
+                REQUEST QUOTATION &rarr;
               </Link>
+
               <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello GL Global Trade Desk, I am seeking export spot pricing.')}`}
+                href="https://wa.me/919999999999"
                 target="_blank"
-                rel="noreferrer"
-                className="bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-slate-700 px-6 py-3.5 rounded text-xs uppercase tracking-wider font-semibold flex items-center gap-2 transition-all"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-md border border-slate-700 bg-slate-900/80 px-6 py-3.5 text-sm font-semibold text-emerald-400 transition-colors hover:bg-slate-800 hover:border-slate-600"
               >
-                <MessageCircle className="w-4 h-4" /> WhatsApp Trade Desk
+                <svg
+                  className="h-4 w-4 fill-current text-emerald-400"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                </svg>
+                WHATSAPP TRADE DESK
               </a>
             </div>
           </div>
         </div>
 
-        {/* Credibility Indicator Strip */}
-        <div className="border-t border-slate-800/80 bg-slate-900/90 py-5 px-6">
-          <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-xs divide-x divide-slate-800">
-            <div>
-              <span className="text-slate-400 block text-[11px]">Laboratory Control</span>
-              <strong className="text-emerald-400 text-sm font-semibold">&lt; 4 ppb Aflatoxin (EU)</strong>
-            </div>
-            <div>
-              <span className="text-slate-400 block text-[11px]">Substrate Wash</span>
-              <strong className="text-white text-sm font-semibold">&lt; 0.5 mS/cm Low EC</strong>
-            </div>
-            <div>
-              <span className="text-slate-400 block text-[11px]">Direct Traceability</span>
-              <strong className="text-blue-400 text-sm font-semibold">100% Farm-Gate & Mill</strong>
-            </div>
-            <div>
-              <span className="text-slate-400 block text-[11px]">Inspection Partners</span>
-              <strong className="text-white text-sm font-semibold">SGS / Eurofins Certified</strong>
+        {/* Updated Bottom Ribbon in Slate Grey */}
+        <div className="w-full bg-slate-800/90 border-t border-b border-slate-700/60 backdrop-blur-md py-5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-slate-700/70">
+              
+              {/* Stat 1: Direct Origin */}
+              <div className="flex flex-col items-center justify-center px-4">
+                <span className="text-slate-400 block text-xs uppercase tracking-wider font-medium">
+                  Direct Origin
+                </span>
+                <span className="text-base sm:text-lg font-semibold text-emerald-400 mt-1">
+                  Tamil Nadu &amp; Andhra Belts
+                </span>
+              </div>
+
+              {/* Stat 2: Sourcing Capacity */}
+              <div className="flex flex-col items-center justify-center px-4 pt-4 md:pt-0">
+                <span className="text-slate-400 block text-xs uppercase tracking-wider font-medium">
+                  Sourcing Capacity
+                </span>
+                <span className="text-base sm:text-lg font-semibold text-emerald-400 mt-1">
+                  10,000+ MT Annual Volume
+                </span>
+              </div>
+
+              {/* Stat 3: Traceability */}
+              <div className="flex flex-col items-center justify-center px-4 pt-4 md:pt-0">
+                <span className="text-slate-400 block text-xs uppercase tracking-wider font-medium">
+                  Direct Traceability
+                </span>
+                <span className="text-base sm:text-lg font-semibold text-blue-400 mt-1">
+                  100% Farm-Gate &amp; Mill
+                </span>
+              </div>
+
+              {/* Stat 4: Inspection Partners */}
+              <div className="flex flex-col items-center justify-center px-4 pt-4 md:pt-0">
+                <span className="text-slate-400 block text-xs uppercase tracking-wider font-medium">
+                  Inspection Partners
+                </span>
+                <span className="text-base sm:text-lg font-semibold text-white mt-1">
+                  SGS / Eurofins Certified
+                </span>
+              </div>
+
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. MULTI-PRODUCT MATRIX */}
-      <section className="py-20 px-6 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-6 border-b border-slate-200 gap-4">
-          <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-blue-700 font-heading">
-              Product Portfolio
-            </span>
-            <h2 className="font-heading font-semibold text-3xl text-slate-900 mt-1 tracking-tight">
-              Export Grade Agricultural Commodities
+      {/* Sourcing Capabilities Overview */}
+      <section className="py-20 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Engineered for Global Agro Procurement
             </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Primary processing, mechanical color sorting, laboratory analysis, and containerized ocean freight.
+            <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+              We bridge the gap between Indian processing mills and international trade standards through institutional compliance, pre-shipment quality control, and direct supply contracts.
             </p>
           </div>
 
-          {/* Interactive Filter Tabs */}
-          <div className="flex flex-wrap gap-2">
-            {[
-              { id: 'all', label: 'All Commodities' },
-              { id: 'peanuts', label: 'Groundnuts' },
-              { id: 'cocopeat', label: 'Coco Peat' },
-              { id: 'desiccated-coconut', label: 'Desiccated Coconut' },
-              { id: 'vco', label: 'Virgin Coconut Oil' },
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setSelectedCategory(tab.id)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  selectedCategory === tab.id
-                    ? 'bg-blue-700 text-white shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {highlights.map((item, index) => (
+              <div
+                key={index}
+                className="rounded-xl border border-slate-200 bg-slate-50/50 p-8 shadow-sm transition-all hover:border-slate-300 hover:shadow-md"
               >
-                {tab.label}
-              </button>
+                <div className="h-2 w-12 bg-blue-600 rounded-full mb-6" />
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+              </div>
             ))}
           </div>
         </div>
-
-        {/* Commodity Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredCommodities.map((item) => (
-            <div
-              key={item.id}
-              className="group border border-slate-200 hover:border-blue-500 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
-            >
-              <div>
-                <div className="relative h-64 w-full overflow-hidden bg-slate-100">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
-                  
-                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-slate-900 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded shadow-sm">
-                    {item.category}
-                  </div>
-
-                  <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
-                    <span className="text-white text-xs font-semibold bg-blue-900/80 px-2 py-0.5 rounded backdrop-blur-sm">
-                      {item.tag}
-                    </span>
-                    <span className="text-emerald-300 text-xs font-mono font-bold bg-slate-950/80 px-2 py-0.5 rounded backdrop-blur-sm">
-                      {item.keyMetric.label}: {item.keyMetric.value}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <h3 className="font-heading font-semibold text-xl text-slate-900 group-hover:text-blue-700 transition-colors">
-                    {item.name}
-                  </h3>
-                  
-                  <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
-                    {item.description}
-                  </p>
-
-                  <div className="mt-5 pt-4 border-t border-slate-100 text-xs">
-                    <div className="text-slate-400 text-[11px] uppercase tracking-wider mb-1 font-semibold">
-                      Standard Export Specifications
-                    </div>
-                    <div className="text-slate-800 font-medium font-mono text-[11px]">
-                      {item.grades}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 pt-0 flex items-center justify-between gap-4">
-                <Link
-                  href={`/request-quote?product=${encodeURIComponent(item.quoteSlug)}`}
-                  className="w-full bg-slate-900 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 rounded text-center transition-colors flex items-center justify-center gap-1.5"
-                >
-                  Request Official Spec & Spot Quote <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
       </section>
 
-      {/* 3. INFRASTRUCTURE & PROCESS */}
-      <section className="bg-slate-50 border-y border-slate-200 py-20 px-6">
-        <div className="max-w-7xl mx-auto space-y-12">
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-blue-700 font-heading">
-              Processing & Assurance
-            </span>
-            <h2 className="font-heading font-semibold text-3xl text-slate-900 mt-1">
-              End-to-End Export Execution
-            </h2>
-            <p className="text-xs text-slate-500 mt-2">
-              Protecting global importers from cargo rejection, moisture degradation, and foreign impurities.
-            </p>
+      {/* Primary Commodities Portfolio */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <div>
+              <span className="text-xs uppercase tracking-wider font-bold text-blue-600">
+                Export Catalog
+              </span>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mt-2">
+                Core Sourced Commodities
+              </h2>
+            </div>
+            <Link
+              href="/products"
+              className="mt-4 md:mt-0 text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+            >
+              View Full Product Catalog &rarr;
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Factory,
-                title: 'Direct Mill Audits',
-                desc: 'On-site factory evaluations of sorting capacity, gravity tables, and hygiene standards in Tamil Nadu & Gujarat.',
-              },
-              {
-                icon: ShieldCheck,
-                title: 'Independent Lab QC',
-                desc: 'Batch-level pre-shipment sampling by SGS or Eurofins for Aflatoxin, pesticide residue, and moisture limits.',
-              },
-              {
-                icon: Truck,
-                title: 'Supervised Stuffing',
-                desc: 'Container floor liner installation, moisture-trapping desiccant bags, and digital seal recording.',
-              },
-              {
-                icon: Globe2,
-                title: 'Export Compliance',
-                desc: 'APEDA, FSSAI, CDB, and phytosanitary certificate documentation issued strictly under ICC Incoterms 2020 rules.',
-              },
-            ].map((feature, idx) => {
-              const Icon = feature.icon;
-              return (
-                <div key={idx} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:border-slate-400 transition-colors">
-                  <div className="w-11 h-11 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h3 className="font-heading font-semibold text-base text-slate-900 mb-2">
-                    {feature.title}
+            {products.map((prod, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[11px] font-semibold text-emerald-600 uppercase tracking-wide">
+                    {prod.origin}
+                  </span>
+                  <h3 className="text-lg font-bold text-slate-900 mt-2 mb-3">
+                    {prod.title}
                   </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {feature.desc}
+                  <p className="text-xs text-slate-500 leading-relaxed mb-6">
+                    {prod.specs}
                   </p>
                 </div>
-              );
-            })}
+                <Link
+                  href={prod.href}
+                  className="text-xs font-semibold text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
+                >
+                  Technical Specifications &rarr;
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 4. COMMERCIAL INQUIRY DESK CTA */}
-      <section className="py-20 px-6 max-w-5xl mx-auto text-center space-y-6">
-        <span className="text-[11px] font-bold uppercase tracking-widest text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 font-heading">
-          Direct Commercial Engagement
-        </span>
-        <h2 className="font-heading font-semibold text-3xl sm:text-4xl text-slate-900">
-          Source Directly from Vetted Indian Processing Facilities
-        </h2>
-        <p className="text-slate-600 text-sm max-w-2xl mx-auto leading-relaxed">
-          Submit your product specification, target volume, and preferred Incoterm (FOB or CIF). Our procurement team issues transparent spot price sheets within 4 hours.
-        </p>
-        <div className="pt-2 flex flex-wrap justify-center gap-4">
-          <Link
-            href="/request-quote"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded text-xs uppercase tracking-wider font-semibold transition-all shadow-md"
-          >
-            Request for Quote
-          </Link>
-          <Link
-            href="/contact"
-            className="bg-slate-100 hover:bg-slate-200 text-slate-800 px-7 py-3.5 rounded text-xs uppercase tracking-wider font-semibold transition-all"
-          >
-            Contact Export Desk
-          </Link>
+      {/* Sourcing Hub Banner */}
+      <section className="py-16 bg-slate-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Direct Mill Inquiries &amp; Custom Sourcing Contracts
+          </h2>
+          <p className="mt-3 text-slate-400 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+            Require certified container consignments, specific seed screen sizes, or laboratory testing protocols? Connect directly with our trade desk.
+          </p>
+          <div className="mt-8 flex justify-center gap-4">
+            <Link
+              href="/contact"
+              className="rounded-md bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-blue-500 transition-colors"
+            >
+              Contact Trade Desk
+            </Link>
+          </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }
