@@ -6,12 +6,48 @@
     --font-heading: var(--font-montserrat), system-ui, sans-serif;
   }
 
+  html {
+    /* Increases the root font size so all rem units scale up globally (from default 16px to 18px) */
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     font-family: var(--font-sans);
+    font-size: 1.125rem; /* ~18px base text size */
+    line-height: 1.7;    /* Improved readability and breathing room for paragraphs and lists */
+    color: #1e293b;      /* Clean slate-800 tone for crisp readability */
+  }
+
+  p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  ul, ol {
+    font-size: 1.05rem;
+    line-height: 1.65;
   }
 
   h1, h2, h3, h4, h5, h6, .font-heading {
     font-family: var(--font-heading);
     font-weight: 600; /* SemiBold */
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: 2.75rem;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 2rem;
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    line-height: 1.35;
   }
 }
