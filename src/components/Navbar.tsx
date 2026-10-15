@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   const WHATSAPP_NUMBER = '919962023496';
@@ -9,11 +10,21 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-[#070d19]/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
+        {/* Brand Logo with Icon */}
         <Link 
           href="/" 
           className="flex items-center gap-2.5 outline-none focus:outline-none"
         >
+          <div className="relative w-8 h-8 flex-shrink-0 flex items-center justify-center rounded overflow-hidden">
+            <Image
+              src="/favicon.ico"
+              alt="GL Global Logo"
+              width={32}
+              height={32}
+              className="object-contain"
+              priority
+            />
+          </div>
           <span className="font-heading font-extrabold text-xl tracking-tight text-white">
             GL <span className="text-blue-500">GLOBAL</span>
           </span>
