@@ -19,25 +19,25 @@ export default function Home() {
       title: "Groundnut Kernels & Blanched Peanuts",
       specs: "Bold & Java varieties, Counts: 38/42, 40/50, 50/60, Aflatoxin <4 ppb certified",
       origin: "Tamil Nadu & Andhra Belts",
-      href: "/request-quote",
+      href: "/products",
     },
     {
       title: "Horticultural Low EC Coco Peat Blocks",
       specs: "5 kg blocks, Washed Low EC < 0.5 mS/cm, Expansion 75-80L, Moisture < 15%",
       origin: "Pollachi & Western Tamil Nadu",
-      href: "/request-quote",
+      href: "/products",
     },
     {
       title: "Crude & Refined Agro Oils",
       specs: "Cold-pressed Sesame, Groundnut, and Castor oil batches with FFA < 1.5%",
       origin: "Southern Indian Mills",
-      href: "/request-quote",
+      href: "/products",
     },
     {
       title: "Whole & Ground Indian Spices",
       specs: "Turmeric fingers (Curcumin 3.5%+), Red Chilli (Stem/Stemless), Coriander seeds",
       origin: "Erode & Guntur Hubs",
-      href: "/request-quote",
+      href: "/products",
     },
   ];
 
