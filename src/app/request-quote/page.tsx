@@ -10,17 +10,24 @@ export default function RequestQuotePage() {
   const [destPort, setDestPort] = useState('');
   const [buyerName, setBuyerName] = useState('');
   const [buyerCompany, setBuyerCompany] = useState('');
+  const [buyerEmail, setBuyerEmail] = useState('');
   const [buyerCountry, setBuyerCountry] = useState('');
   const [notes, setNotes] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const WHATSAPP_NUMBER = '919962023496';
+  const WEB3FORMS_ACCESS_KEY = '8abc1a35-77c3-4fba-a5c3-b2f7fde03ad1';
+  const TARGET_EMAIL = 'business@glglobal.in';
 
-  const handleWhatsAppSubmission = (e: React.FormEvent) => {
+  const handleSubmission = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     const payload =
       `*COMMERCIAL QUOTE REQUEST - GL GLOBAL (glglobal.in)*\n\n` +
       `*Buyer Name:* ${buyerName || 'Unspecified'}\n` +
       `*Company:* ${buyerCompany || 'Unspecified'}\n` +
+      `*Email:* ${buyerEmail || 'Unspecified'}\n` +
       `*Country:* ${buyerCountry || 'Unspecified'}\n` +
       `*Commodity:* ${commodity}\n` +
       `*Order Volume:* ${volume}\n` +
@@ -29,8 +36,37 @@ export default function RequestQuotePage() {
       `*Special Specs/Lab Needs:* ${notes || 'Standard Export Grade'}\n\n` +
       `_Please provide current FOB/CIF spot quotations and available sailing schedule._`;
 
-    const encoded = encodeURIComponent(payload);
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+    try {
+      await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          to: TARGET_EMAIL,
+          subject: `Commercial Quote Request: ${commodity} - ${buyerCompany || buyerName}`,
+          from_name: 'GL Global RFQ Portal',
+          reply_to: buyerEmail,
+          'Buyer Name': buyerName,
+          'Company Name': buyerCompany,
+          'Company Email': buyerEmail,
+          'Country': buyerCountry,
+          'Target Commodity': commodity,
+          'Required Volume': volume,
+          'Incoterms Required': incoterm,
+          'Destination Sea Port': destPort,
+          'Special Tolerances / Packaging / Lab Requirements': notes || 'Standard Export Grade',
+        }),
+      });
+    } catch (error) {
+      console.error('Error submitting to Web3Forms:', error);
+    } finally {
+      setIsSubmitting(false);
+      const encoded = encodeURIComponent(payload);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+    }
   };
 
   return (
@@ -48,8 +84,8 @@ export default function RequestQuotePage() {
           </p>
         </div>
 
-        <form onSubmit={handleWhatsAppSubmission} className="space-y-6 text-xs">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <form onSubmit={handleSubmission} className="space-y-6 text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-slate-700 font-semibold mb-1">Your Name *</label>
               <input
@@ -69,6 +105,20 @@ export default function RequestQuotePage() {
                 value={buyerCompany}
                 onChange={(e) => setBuyerCompany(e.target.value)}
                 placeholder="e.g., Mercer Agro Corp"
+                className="w-full border border-slate-300 p-2.5 rounded bg-slate-50 focus:bg-white"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-slate-700 font-semibold mb-1">Company Email Address *</label>
+              <input
+                type="email"
+                required
+                value={buyerEmail}
+                onChange={(e) => setBuyerEmail(e.target.value)}
+                placeholder="e.g., procurement@merceragro.com"
                 className="w-full border border-slate-300 p-2.5 rounded bg-slate-50 focus:bg-white"
               />
             </div>
@@ -154,9 +204,11 @@ export default function RequestQuotePage() {
 
           <button
             type="submit"
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all"
+            disabled={isSubmitting}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-400 text-white font-semibold py-3.5 rounded text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all"
           >
-            <MessageCircle className="w-4 h-4" /> Send Request to WhatsApp Procurement Desk
+            <MessageCircle className="w-4 h-4" />
+            {isSubmitting ? 'Transmitting Request...' : 'Send Request to WhatsApp Procurement Desk'}
           </button>
         </form>
       </div>
