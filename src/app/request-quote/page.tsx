@@ -16,7 +16,7 @@ export default function RequestQuotePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const WHATSAPP_NUMBER = '919962023496';
-  const WEB3FORMS_ACCESS_KEY = '8abc1a35-77c3-4fba-a5c3-b2f7fde03ad1';
+  const WEB3FORMS_ACCESS_KEY = '4ef220b6-c2a2-41d6-902b-03497fecb163';
   const TARGET_EMAIL = 'business@glglobal.in';
 
   const handleSubmission = async (e: React.FormEvent) => {
@@ -207,8 +207,8 @@ export default function RequestQuotePage() {
             disabled={isSubmitting}
             className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-400 text-white font-semibold py-3.5 rounded text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all"
           >
-            <MessageCircle className="w-4 h-4" />
-            {isSubmitting ? 'Transmitting Request...' : 'Send Request to WhatsApp Procurement Desk'}
+            <Send className="w-4 h-4" />
+            {isSubmitting ? 'Sending Request...' : 'Send Request'}
           </button>
         </form>
       </div>
