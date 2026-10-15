@@ -22,7 +22,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Navigation Items (About page removed, outline boxes removed) */}
+        {/* Navigation Items */}
         <nav className="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-slate-300">
           <Link
             href="/"
@@ -34,7 +34,13 @@ export default function Navbar() {
             href="/products"
             className="hover:text-white transition-colors outline-none focus:outline-none focus:ring-0"
           >
-            Commodities
+            Products
+          </Link>
+          <Link
+            href="/services"
+            className="hover:text-white transition-colors outline-none focus:outline-none focus:ring-0"
+          >
+            Services
           </Link>
           <Link
             href="/quality"
@@ -42,14 +48,12 @@ export default function Navbar() {
           >
             Quality &amp; Specs
           </Link>
-          <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-emerald-400 transition-colors outline-none focus:outline-none focus:ring-0"
+          <Link
+            href="/contact"
+            className="hover:text-white transition-colors outline-none focus:outline-none focus:ring-0"
           >
-            Trade Desk
-          </a>
+            Contact
+          </Link>
         </nav>
 
         {/* Action Button */}
