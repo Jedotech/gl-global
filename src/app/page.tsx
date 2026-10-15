@@ -306,7 +306,7 @@ export default function Home() {
                   href={prod.href}
                   className="text-xs font-semibold text-blue-400 hover:text-blue-300 inline-flex items-center gap-1"
                 >
-                  Request Technical Quote &rarr;
+                  View Product Specifications &rarr;
                 </Link>
               </div>
             ))}
