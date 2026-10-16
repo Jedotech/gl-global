@@ -50,13 +50,7 @@ export default function Navbar() {
             Products
           </Link>
           <Link
-            href="/services"
-            className="hover:text-white transition-colors outline-none focus:outline-none focus:ring-0"
-          >
-            Services
-          </Link>
-          <Link
-            href="/quality"
+            href="/gallery"
             className="hover:text-white transition-colors outline-none focus:outline-none focus:ring-0"
           >
             Gallery
