@@ -13,24 +13,26 @@ export default function Navbar() {
         {/* Brand Logo with Icon */}
         <Link 
           href="/" 
-          className="flex items-center gap-2.5 outline-none focus:outline-none"
+          className="flex items-center gap-3 outline-none focus:outline-none"
         >
-          <div className="relative w-8 h-8 flex-shrink-0 flex items-center justify-center rounded overflow-hidden">
+          <div className="relative w-9 h-9 flex-shrink-0 flex items-center justify-center rounded overflow-hidden">
             <Image
               src="/favicon.ico"
               alt="GL Global Logo"
-              width={32}
-              height={32}
+              width={36}
+              height={36}
               className="object-contain"
               priority
             />
           </div>
-          <span className="font-heading font-extrabold text-xl tracking-tight text-white">
-            GL <span className="text-blue-500">GLOBAL</span>
-          </span>
-          <span className="text-[10px] tracking-wider font-semibold px-2 py-0.5 rounded bg-blue-950/80 border border-blue-800/50 text-blue-300">
-            a brand of gl exporters.pvt.ltd
-          </span>
+          <div className="flex flex-col text-left">
+            <span className="font-heading font-extrabold text-xl tracking-tight text-white leading-tight">
+              GL Global
+            </span>
+            <span className="text-[11px] font-medium text-blue-400 tracking-normal leading-tight">
+              A brand of GL Exporters Pvt. Ltd.
+            </span>
+          </div>
         </Link>
 
         {/* Navigation Items */}
