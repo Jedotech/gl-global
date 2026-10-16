@@ -59,7 +59,7 @@ export default function Navbar() {
             href="/quality"
             className="hover:text-white transition-colors outline-none focus:outline-none focus:ring-0"
           >
-            Quality &amp; Specs
+            Gallery
           </Link>
           <Link
             href="/contact"
