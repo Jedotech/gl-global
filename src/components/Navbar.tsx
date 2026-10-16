@@ -28,8 +28,8 @@ export default function Navbar() {
           <span className="font-heading font-extrabold text-xl tracking-tight text-white">
             GL <span className="text-blue-500">GLOBAL</span>
           </span>
-          <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-blue-950/80 border border-blue-800/50 text-blue-300">
-            Agro Export
+          <span className="text-[10px] tracking-wider font-semibold px-2 py-0.5 rounded bg-blue-950/80 border border-blue-800/50 text-blue-300">
+            a brand of gl exporters.pvt.ltd
           </span>
         </Link>
 
