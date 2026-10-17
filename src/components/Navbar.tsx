@@ -56,6 +56,12 @@ export default function Navbar() {
             Our Services
           </Link>
           <Link
+            href="/blog"
+            className="hover:text-white transition-colors outline-none focus:outline-none focus:ring-0"
+          >
+            Blog
+          </Link>
+          <Link
             href="/contact"
             className="hover:text-white transition-colors outline-none focus:outline-none focus:ring-0"
           >
