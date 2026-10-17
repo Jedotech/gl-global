@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ShieldCheck,
   Target,
@@ -20,6 +21,7 @@ export default function Home() {
       specs: "Bold & Java varieties, Counts: 38/42, 40/50, 50/60, Aflatoxin <4 ppb certified",
       origin: "Tamil Nadu & Andhra Belts",
       href: "/products",
+      image: "/groundnut.png",
     },
     {
       title: "Horticultural Low EC Coco Peat Blocks",
@@ -293,9 +295,20 @@ export default function Home() {
             {products.map((prod, idx) => (
               <div
                 key={idx}
-                className="bg-slate-900 rounded-xl border border-slate-800 p-6 flex flex-col justify-between hover:border-slate-700 transition"
+                className="bg-slate-900 rounded-xl border border-slate-800 p-6 flex flex-col justify-between hover:border-slate-700 transition overflow-hidden"
               >
                 <div>
+                  {prod.image && (
+                    <div className="relative w-full h-40 mb-4 rounded-lg overflow-hidden bg-slate-800">
+                      <Image
+                        src={prod.image}
+                        alt={prod.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
+                  )}
                   <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
                     {prod.origin}
                   </span>
