@@ -31,10 +31,11 @@ export default function Home() {
       image: "/redchilli.png",
     },
     {
-      title: "Crude & Refined Agro Oils",
-      specs: "Cold-pressed Sesame, Groundnut, and Castor oil batches with FFA < 1.5%",
-      origin: "Southern Indian Mills",
+      title: "Raw Turmeric Fingers & Bulbs",
+      specs: "Salem & Nizamabad varieties, Curcumin 3.0%-5.0%, Moisture < 10%, Machine Polished",
+      origin: "Erode & Salem Hubs",
       href: "/products",
+      image: "/turmeric.png",
     },
     {
       title: "Whole & Ground Indian Spices",
