@@ -16,7 +16,7 @@ import {
   Activity
 } from 'lucide-react';
 
-export default function GalleryPage() {
+export default function OurServicesPage() {
   const [activeStep, setActiveStep] = useState<number>(0);
 
   const SERVICES = [
@@ -96,7 +96,7 @@ export default function GalleryPage() {
             End-to-End Trade Architecture
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Procurement Lifecycle & Export Representation
+            Our Services
           </h1>
           <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-3xl leading-relaxed">
             A linear, verified execution pipeline engineered to protect global buyers from grade substitution, unseen contamination, and dispatch bottlenecks in the Indian market.
@@ -136,8 +136,16 @@ export default function GalleryPage() {
               return (
                 <div
                   key={srv.step}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setActiveStep(idx)}
-                  className={`group relative flex items-start gap-4 p-5 rounded-xl border cursor-pointer transition-all duration-300 ${
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setActiveStep(idx);
+                    }
+                  }}
+                  className={`group relative flex items-start gap-4 p-5 rounded-xl border cursor-pointer transition-all duration-300 focus:outline-hidden ${
                     isSelected
                       ? 'bg-white border-blue-500 shadow-lg shadow-blue-900/5 ring-1 ring-blue-500/20'
                       : 'bg-white/70 hover:bg-white border-slate-200 hover:border-slate-300 shadow-xs'
