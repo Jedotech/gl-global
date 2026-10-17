@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
@@ -8,13 +10,11 @@ import {
   CheckCircle2, 
   ArrowRight, 
   ShieldCheck, 
-  Anchor, 
-  ChevronRight,
   ClipboardList,
   Sparkles
 } from 'lucide-react';
 
-export default function ServicesPage() {
+export default function GalleryPage() {
   const [activeStep, setActiveStep] = useState<number>(0);
 
   const SERVICES = [
