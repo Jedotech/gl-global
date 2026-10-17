@@ -38,10 +38,11 @@ export default function Home() {
       image: "/turmeric.png",
     },
     {
-      title: "Whole & Ground Indian Spices",
-      specs: "Turmeric fingers (Curcumin 3.5%+), Red Chilli (Stem/Stemless), Coriander seeds",
-      origin: "Erode & Guntur Hubs",
+      title: "Semi-Husked Fresh Mature Coconuts",
+      specs: "Grade A, 550g-650g weight per nut, High water content, Minimum 65-day shelf life",
+      origin: "Pollachi & Western Tamil Nadu",
       href: "/products",
+      image: "/coconut.png",
     },
   ];
 
