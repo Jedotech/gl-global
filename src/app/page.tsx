@@ -68,9 +68,22 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 text-slate-100 selection:bg-blue-600 selection:text-white">
       {/* -------------------- 1. HERO SECTION -------------------- */}
       <section className="relative bg-[#050b14] border-b border-slate-800/80 overflow-hidden">
+        {/* Background Banner Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/hero-banner.png"
+            alt="Indian Agricultural Commodities, Sourced with Industrial Precision"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-30 mix-blend-luminosity"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/60" />
+        </div>
+
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/25 via-transparent to-transparent pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 md:pt-10 md:pb-20">
           <div className="max-w-4xl">
             {/* Tagline Badge */}
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/50 px-3.5 py-1 text-xs font-semibold text-blue-300 backdrop-blur-sm mb-6">
@@ -113,7 +126,7 @@ export default function Home() {
         </div>
 
         {/* Stats & Credential Ribbon */}
-        <div className="w-full bg-slate-900/90 border-t border-slate-800 py-5">
+        <div className="relative z-10 w-full bg-slate-900/90 border-t border-slate-800 py-5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-slate-800">
               <div className="flex flex-col items-center justify-center px-4">
