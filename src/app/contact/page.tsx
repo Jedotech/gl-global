@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Globe, Clock, ShieldCheck, ChevronDown, HelpCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Mail, Phone, MapPin, Globe, Clock, ShieldCheck, ChevronDown, HelpCircle, ArrowRight } from 'lucide-react';
 
 export default function ContactPage() {
   const WHATSAPP_NUMBER = '919962023496';
@@ -94,6 +95,17 @@ export default function ContactPage() {
                 <strong className="text-slate-900 block font-semibold">Operating Hours:</strong>
                 <div>Monday - Saturday: 09:00 - 19:00 IST (UTC +5:30)</div>
               </div>
+            </div>
+
+            {/* Request for Quote Button */}
+            <div className="pt-2 border-t border-slate-100">
+              <Link
+                href="/request-quote"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+              >
+                Request a Custom Quote
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
 
