@@ -1,8 +1,38 @@
-import React from 'react';
-import { Mail, Phone, MapPin, Globe, Clock, ShieldCheck } from 'lucide-react';
+'use client';
+
+import React, { useState } from 'react';
+import { Mail, Phone, MapPin, Globe, Clock, ShieldCheck, ChevronDown, HelpCircle } from 'lucide-react';
 
 export default function ContactPage() {
   const WHATSAPP_NUMBER = '919962023496';
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const FAQS = [
+    {
+      q: 'What commodities do you specialize in sourcing and exporting from India?',
+      a: 'We specialize in Indian agricultural origin products including graded groundnuts/peanuts, low EC washed coco peat blocks (5 kg and briquettes), coir substrates, and regional agricultural crops sourced directly from mill belts across Tamil Nadu, Karnataka, and Andhra Pradesh.',
+    },
+    {
+      q: 'Which international commercial terms (Incoterms) do you operate under?',
+      a: 'We standardly execute trade agreements under Incoterms 2020 on FOB (Chennai / Tuticorin port), CFR, and CIF terms to major commercial discharge ports across Europe, Southeast Asia, the Middle East, and North America.',
+    },
+    {
+      q: 'What quality certifications and independent lab testing do you provide?',
+      a: 'Every pre-shipment consignment undergoes standardized composite sampling adhering to GAFTA/FOSFA guidelines. Testing is conducted through ISO/IEC 17025 accredited independent laboratories (such as SGS, Bureau Veritas, or Eurofins) covering Aflatoxin B1/Total limits, moisture content, physical purity, and phytosanitary clearance.',
+    },
+    {
+      q: 'What are the accepted payment methods and financing structures?',
+      a: 'We facilitate commercial transactions primarily via Irrevocable Letter of Credit (LC) at Sight issued by first-class international banks, Cash Against Documents (CAD) through authorized dealer banking channels, and standard Telegraphic Transfer (TT) milestone structures.',
+    },
+    {
+      q: 'Can we request customized private labeling or packaging for retail distribution?',
+      a: 'Yes. We accommodate private label branding, customized multi-ply paper or polypropylene (PP) bags, vacuum-sealed inner packaging, and specific palletization/shrink-wrap guidelines according to your market regulations.',
+    },
+  ];
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
@@ -101,6 +131,56 @@ export default function ContactPage() {
               Open WhatsApp Trade Chat
             </a>
           </div>
+        </div>
+      </div>
+
+      {/* Frequently Asked Questions Section */}
+      <div className="border-t border-slate-200 pt-12 space-y-8">
+        <div className="space-y-2">
+          <span className="text-[11px] font-bold text-blue-700 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded font-heading inline-flex items-center gap-1.5">
+            <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+            Trade Desk Inquiries
+          </span>
+          <h2 className="font-heading font-semibold text-2xl text-slate-900">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-2xl font-sans">
+            Key operational information regarding contract executions, sampling protocols, and international shipping parameters.
+          </p>
+        </div>
+
+        <div className="divide-y divide-slate-200 border-y border-slate-200">
+          {FAQS.map((faq, index) => {
+            const isOpen = openFaq === index;
+            return (
+              <div key={index} className="py-5">
+                <button
+                  type="button"
+                  onClick={() => toggleFaq(index)}
+                  className="w-full flex items-center justify-between text-left gap-4 focus:outline-none group"
+                >
+                  <span className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">
+                    {faq.q}
+                  </span>
+                  <div
+                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'bg-blue-50 text-blue-700 rotate-180' : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'
+                    }`}
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </button>
+
+                {isOpen && (
+                  <div className="mt-3 pr-8">
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-sans">
+                      {faq.a}
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
