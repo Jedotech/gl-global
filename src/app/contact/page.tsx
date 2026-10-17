@@ -103,7 +103,7 @@ export default function ContactPage() {
                 href="/request-quote"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
               >
-                Request a Custom Quote
+                Request a Quote
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
