@@ -24,10 +24,11 @@ export default function Home() {
       image: "/groundnut.png",
     },
     {
-      title: "Horticultural Low EC Coco Peat Blocks",
-      specs: "5 kg blocks, Washed Low EC < 0.5 mS/cm, Expansion 75-80L, Moisture < 15%",
-      origin: "Pollachi & Western Tamil Nadu",
+      title: "Premium Whole & Stemless Red Chilli",
+      specs: "Sannam S4, Teja & Byadagi varieties, Moisture < 11%, ASTA Color 40-120, High Pungency",
+      origin: "Guntur & Byadagi Hubs",
       href: "/products",
+      image: "/redchilli.png",
     },
     {
       title: "Crude & Refined Agro Oils",
