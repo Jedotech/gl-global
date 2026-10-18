@@ -82,7 +82,7 @@ const INITIAL_PRODUCTS: Product[] = [
     packaging: '20kg / 25kg Multi-wall Kraft paper bags with inner food-grade PE liner',
     fclCapacity: '20ft FCL: 18 Metric Tons / 40ft FCL: 26 Metric Tons',
     description: 'Cryogenically and mechanically ground pure spices processed from steam-sterilized whole lots. Free from starch fillers, adulterants, or added synthetic coloring agents.',
-    image: '/turmeric.png'
+    image: '/ground-spices.png'
   },
   {
     id: 'p7',
