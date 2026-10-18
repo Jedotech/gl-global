@@ -370,7 +370,7 @@ export default function BlogPage() {
                   onClick={() => setShowPinModal(true)}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900/80 px-3.5 py-2 text-xs font-medium text-slate-400 hover:text-white hover:border-slate-700 transition"
                 >
-                  <Lock className="w-3.5 h-3.5 text-slate-400" /> Admin Access
+                  <Lock className="w-3.5 h-3.5 text-slate-400" /> Admin
                 </button>
               )}
             </div>
