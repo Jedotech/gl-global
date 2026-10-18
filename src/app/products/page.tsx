@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Plus, Trash2, ArrowRight, Lock, Unlock, ShieldAlert } from 'lucide-react';
 
 interface Product {
@@ -13,6 +14,7 @@ interface Product {
   packaging: string;
   fclCapacity: string;
   description: string;
+  image?: string;
 }
 
 const INITIAL_PRODUCTS: Product[] = [
@@ -28,43 +30,91 @@ const INITIAL_PRODUCTS: Product[] = [
   },
   {
     id: 'p2',
+    name: 'Fresh Mature Semi-Husked Coconuts',
+    category: 'Coconut',
+    grade: 'Grade A (550g - 650g / 600g - 700g)',
+    moisture: 'Natural water retention (>65-day shelf life)',
+    packaging: '25 Nuts per PP Mesh Bag (approx. 13-14 kg)',
+    fclCapacity: '40ft HC Reefer: 2,000 Bags (50,000 Nuts)',
+    description: 'Carefully cured and semi-husked mature coconuts sourced from the Pollachi green belt. Intact outer fiber eye tuft preserves inner nut water and prevents germination in reefer transit.',
+    image: '/coconut.png'
+  },
+  {
+    id: 'p3',
+    name: 'Bold Groundnuts (Peanut Kernels)',
+    category: 'Groundnut',
+    grade: 'Counts: 38/42, 40/50, 50/60 per oz',
+    moisture: '< 7.0% Max',
+    packaging: '25kg Vacuum Bags or 50kg Jute / PP Bags',
+    fclCapacity: '20ft FCL: 19 Metric Tons',
+    description: 'Mechanically sorted and destoned Bold kernels from Tamil Nadu & Andhra Pradesh. Certified Aflatoxin < 4 ppb (B1 < 2 ppb) meeting EU, ASEAN, and GAFTA standards.',
+    image: '/groundnut.png'
+  },
+  {
+    id: 'p4',
+    name: 'Whole Dried Red Chillies (Teja & Sannam S4)',
+    category: 'Spices',
+    grade: 'Teja S17 (60K-100K SHU) / Sannam S4 Stemless & With Stem',
+    moisture: '< 11.0% Max',
+    packaging: '10kg / 25kg / 50kg Jute Bags or Compressed Hydraulic Bales',
+    fclCapacity: '40ft HC: 14 Metric Tons (Bales)',
+    description: 'Direct Guntur origin dry red chillies with uniform deep red pigmentation (ASTA 50-70 for Teja, 40-60 for S4), < 1% loose seeds, and zero artificial dyes.',
+    image: '/redchilli.png'
+  },
+  {
+    id: 'p5',
+    name: 'Raw Turmeric Fingers & Bulbs',
+    category: 'Spices',
+    grade: 'Salem / Nizamabad (Curcumin 3.0% - 5.0%+)',
+    moisture: '< 10.0% Max',
+    packaging: '25kg / 50kg Jute or PP Bags',
+    fclCapacity: '20ft FCL: 18 Metric Tons',
+    description: 'Machine-polished double-boiled turmeric rhizomes from Erode and Salem hubs. High natural curcumin concentration, tested for zero chemical residue and lead chromate free.',
+    image: '/turmeric.png'
+  },
+  {
+    id: 'p6',
+    name: 'Pure Ground Spices (Chilli, Turmeric & Coriander Powders)',
+    category: 'Spices',
+    grade: 'Micro-Pulverized 60-80 Mesh (Industrial Food Grade)',
+    moisture: '< 9.0% Max',
+    packaging: '20kg / 25kg Multi-wall Kraft paper bags with inner food-grade PE liner',
+    fclCapacity: '20ft FCL: 18 Metric Tons / 40ft FCL: 26 Metric Tons',
+    description: 'Cryogenically and mechanically ground pure spices processed from steam-sterilized whole lots. Free from starch fillers, adulterants, or added synthetic coloring agents.',
+    image: '/turmeric.png'
+  },
+  {
+    id: 'p7',
     name: 'Desiccated Coconut Powder (High Fat)',
     category: 'Coconut',
     grade: 'Fine / Medium Grade A',
     moisture: '< 3.0%',
     packaging: '25kg / 50kg Multi-wall Kraft paper bags with inner PE',
     fclCapacity: '40ft HC: 18 Metric Tons',
-    description: 'Clean white granulated kernel powder free from foreign matter. Minimum 65% natural coconut fat content, zero SO2 added.'
+    description: 'Clean white granulated kernel powder free from foreign matter. Minimum 65% natural coconut fat content, zero SO2 added.',
+    image: '/coconut.png'
   },
   {
-    id: 'p3',
-    name: 'Bold Groundnuts (Peanuts Kernels)',
-    category: 'Groundnut',
-    grade: 'Counts: 38/42, 40/50, 50/60',
-    moisture: '< 7.0%',
-    packaging: '25kg Vacuum or 50kg Jute / PP bags',
-    fclCapacity: '20ft FCL: 19 Metric Tons',
-    description: 'Mechanically cleaned and color-sorted kernels. Certified Aflatoxin < 4 ppb meeting strict EU & ASEAN compliance.'
-  },
-  {
-    id: 'p4',
+    id: 'p8',
     name: 'Java Groundnuts (Small Kernels)',
     category: 'Groundnut',
     grade: 'Counts: 50/60, 60/70, 70/80',
     moisture: '< 7.0%',
     packaging: '50kg Jute or PP bags',
     fclCapacity: '20ft FCL: 19 Metric Tons',
-    description: 'Spherical pink-skinned kernels with high oil yield. Graded for confectioneries, peanut butter production, and direct snacking.'
+    description: 'Spherical pink-skinned kernels with high oil yield. Graded for confectioneries, peanut butter production, and direct snacking.',
+    image: '/groundnut.png'
   },
   {
-    id: 'p5',
+    id: 'p9',
     name: 'Cold Pressed Virgin Coconut Oil (VCO)',
     category: 'Coconut',
     grade: 'Extra Virgin / Cold Centrifuged',
     moisture: '< 0.1%',
     packaging: '200L Steel Drums / 1000L IBC Totes',
     fclCapacity: '20ft FCL: 16 Metric Tons',
-    description: 'Extracted without heat from fresh coconut milk. High Lauric Acid (>49%) content, crystal clear with distinct natural aroma.'
+    description: 'Extracted without heat from fresh coconut milk. High Lauric Acid (>49%) content, crystal clear with distinct natural aroma.',
+    image: '/coconut.png'
   }
 ];
 
@@ -76,7 +126,7 @@ export default function ProductsPage() {
   const [pinError, setPinError] = useState<boolean>(false);
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
-  // Default Passkey (You can customize this passcode)
+  // Default Passkey
   const ADMIN_PASSCODE = 'admin123';
 
   useEffect(() => {
@@ -114,6 +164,7 @@ export default function ProductsPage() {
     packaging: '',
     fclCapacity: '',
     description: '',
+    image: '',
   });
 
   const handleAddProduct = (e: React.FormEvent) => {
@@ -129,6 +180,7 @@ export default function ProductsPage() {
       packaging: '',
       fclCapacity: '',
       description: '',
+      image: '',
     });
     setShowAddForm(false);
   };
@@ -310,6 +362,16 @@ export default function ProductsPage() {
                 className="w-full border border-slate-300 p-2.5 rounded bg-white"
               />
             </div>
+            <div>
+              <label className="block text-slate-700 font-semibold mb-1">Image Path (in /public)</label>
+              <input
+                type="text"
+                value={newProd.image}
+                onChange={(e) => setNewProd({ ...newProd, image: e.target.value })}
+                placeholder="e.g., /groundnut.png"
+                className="w-full border border-slate-300 p-2.5 rounded bg-white"
+              />
+            </div>
             <div className="md:col-span-2">
               <label className="block text-slate-700 font-semibold mb-1">Technical Summary</label>
               <textarea
@@ -344,57 +406,74 @@ export default function ProductsPage() {
         {products.map((item) => (
           <div
             key={item.id}
-            className="bg-white border border-slate-200 rounded-xl p-6 flex flex-col justify-between shadow-sm hover:border-slate-400 transition-colors relative"
+            className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col justify-between shadow-sm hover:border-slate-400 transition-colors relative"
           >
             <div>
-              <div className="flex justify-between items-start mb-3">
-                <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-slate-100 text-slate-700 rounded font-heading">
-                  {item.category}
-                </span>
-
-                {/* Delete button: Only rendered for authenticated Administrator */}
-                {isAdmin && (
-                  <button
-                    onClick={() => handleRemoveProduct(item.id)}
-                    title="Delete product (Admin only)"
-                    className="text-slate-400 hover:text-red-600 p-1 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              <h2 className="font-heading font-semibold text-base text-slate-900 mt-1">{item.name}</h2>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">{item.description}</p>
-
-              <div className="mt-5 pt-4 border-t border-slate-100 space-y-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Grade:</span>
-                  <span className="font-semibold text-slate-800">{item.grade}</span>
+              {/* Product Image Banner */}
+              {item.image && (
+                <div className="relative w-full h-44 bg-slate-100 border-b border-slate-100 overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Moisture:</span>
-                  <span className="font-semibold text-slate-800">{item.moisture}</span>
+              )}
+
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-3">
+                  <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-slate-100 text-slate-700 rounded font-heading">
+                    {item.category}
+                  </span>
+
+                  {/* Delete button: Only rendered for authenticated Administrator */}
+                  {isAdmin && (
+                    <button
+                      onClick={() => handleRemoveProduct(item.id)}
+                      title="Delete product (Admin only)"
+                      className="text-slate-400 hover:text-red-600 p-1 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Packaging:</span>
-                  <span className="font-semibold text-slate-800 text-right">{item.packaging}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Container Capacity:</span>
-                  <span className="font-bold text-blue-700">{item.fclCapacity}</span>
+
+                <h2 className="font-heading font-semibold text-base text-slate-900 mt-1">{item.name}</h2>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">{item.description}</p>
+
+                <div className="mt-5 pt-4 border-t border-slate-100 space-y-2 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Grade:</span>
+                    <span className="font-semibold text-slate-800 text-right">{item.grade}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Moisture:</span>
+                    <span className="font-semibold text-slate-800">{item.moisture}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Packaging:</span>
+                    <span className="font-semibold text-slate-800 text-right">{item.packaging}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Container Capacity:</span>
+                    <span className="font-bold text-blue-700">{item.fclCapacity}</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Direct Link to /request-quote */}
-            <div className="mt-6 pt-4 border-t border-slate-100">
-              <Link
-                href={`/request-quote?product=${encodeURIComponent(item.name)}`}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2.5 rounded text-center transition-colors flex items-center justify-center gap-1.5"
-              >
-                Request for Quote <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+            <div className="p-6 pt-0">
+              <div className="pt-4 border-t border-slate-100">
+                <Link
+                  href={`/request-quote?product=${encodeURIComponent(item.name)}`}
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2.5 rounded text-center transition-colors flex items-center justify-center gap-1.5"
+                >
+                  Request for Quote <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
           </div>
         ))}
