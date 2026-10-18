@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   BookOpen, 
   Clock, 
@@ -20,6 +21,7 @@ interface BlogPost {
   category: string;
   readTime: string;
   date: string;
+  image?: string;
   excerpt: string;
   content: {
     overview: string;
@@ -41,6 +43,7 @@ export default function BlogPage() {
       category: 'Quality Control & Compliance',
       readTime: '5 min read',
       date: 'October 2026',
+      image: '/blog-groundnut-grading.png',
       excerpt: 'How international buyers secure EU and East Asian compliant bold and java groundnuts by implementing direct farm-gate sampling, calibrated screen grading, and pre-stuffing lab verification.',
       content: {
         overview: 'International buyers of Indian groundnuts (Arachis hypogaea) face two major friction points: meeting strict mycotoxin limits (such as the EU standard of Aflatoxin B1 ≤ 2 ppb and Total ≤ 4 ppb) and preventing count variance during mechanical shelling. Traditional broker channels often blend lots from disparate yards, introducing variance in oil content and latent moisture that leads to en-route mold development in containerized transit.',
@@ -69,6 +72,7 @@ export default function BlogPage() {
       category: 'Spice Procurement',
       readTime: '6 min read',
       date: 'October 2026',
+      image: '/blog-chilli-grading.png',
       excerpt: 'A commercial breakdown of Indian dry red chilli varieties—evaluating SHU heat levels, ASTA extractable color units, aflatoxin/ochratoxin control, and container loadability.',
       content: {
         overview: 'India produces over 40% of the world’s dried red chillies, anchored by the Guntur trading hub in Andhra Pradesh and the Byadagi cluster in Karnataka. For overseas food processors, oleoresin extractors, and wholesale spice packers, procuring dry chillies requires a technical understanding of the relationship between heat, color, and physical preparation.',
@@ -177,29 +181,43 @@ export default function BlogPage() {
             {posts.map((post) => (
               <article 
                 key={post.id}
-                className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-8 flex flex-col justify-between transition-all duration-200 group"
+                className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl overflow-hidden flex flex-col justify-between transition-all duration-200 group"
               >
                 <div>
-                  <div className="flex items-center justify-between gap-3 text-xs mb-4">
-                    <span className="font-semibold text-emerald-400 uppercase tracking-wider bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-0.5 rounded">
-                      {post.category}
-                    </span>
-                    <span className="flex items-center gap-1.5 text-slate-400">
-                      <Clock className="w-3.5 h-3.5" />
-                      {post.readTime}
-                    </span>
+                  {post.image && (
+                    <div className="relative w-full h-48 bg-slate-800 overflow-hidden">
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                  )}
+
+                  <div className="p-6 sm:p-8">
+                    <div className="flex items-center justify-between gap-3 text-xs mb-4">
+                      <span className="font-semibold text-emerald-400 uppercase tracking-wider bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-0.5 rounded">
+                        {post.category}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-slate-400">
+                        <Clock className="w-3.5 h-3.5" />
+                        {post.readTime}
+                      </span>
+                    </div>
+
+                    <h2 className="text-lg sm:text-xl font-bold text-white group-hover:text-blue-400 transition-colors leading-snug mb-3">
+                      {post.title}
+                    </h2>
+
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      {post.excerpt}
+                    </p>
                   </div>
-
-                  <h2 className="text-lg sm:text-xl font-bold text-white group-hover:text-blue-400 transition-colors leading-snug mb-3">
-                    {post.title}
-                  </h2>
-
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
-                    {post.excerpt}
-                  </p>
                 </div>
 
-                <div className="pt-6 border-t border-slate-800/80 flex items-center justify-between">
+                <div className="px-6 pb-6 sm:px-8 sm:pb-8 pt-4 border-t border-slate-800/80 flex items-center justify-between">
                   <span className="text-[11px] text-slate-500 font-medium">
                     Published: {post.date}
                   </span>
@@ -222,11 +240,22 @@ export default function BlogPage() {
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative shadow-2xl">
             <button
               onClick={() => setActivePost(null)}
-              className="absolute top-5 right-5 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+              className="absolute top-5 right-5 z-10 p-2 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-400 hover:text-white transition"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
             </button>
+
+            {activePost.image && (
+              <div className="relative w-full h-56 sm:h-64 rounded-xl overflow-hidden mb-6 bg-slate-800">
+                <Image
+                  src={activePost.image}
+                  alt={activePost.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
 
             <div className="flex items-center gap-3 text-xs mb-3">
               <span className="font-semibold text-emerald-400 uppercase tracking-wider bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-0.5 rounded">
