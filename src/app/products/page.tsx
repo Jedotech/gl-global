@@ -132,7 +132,6 @@ export default function ProductsPage() {
   const ADMIN_PASSCODE = 'admin123';
 
   useEffect(() => {
-    // Check if admin session already exists in current browser
     const storedAuth = sessionStorage.getItem('gl_admin_session');
     if (storedAuth === 'true') {
       setIsAdmin(true);
@@ -337,7 +336,7 @@ export default function ProductsPage() {
         </div>
       )}
 
-      {/* Add Product Form: Only accessible to authenticated Admin */}
+      {/* Add Product Form */}
       {isAdmin && showAddForm && (
         <div className="bg-slate-100 border border-slate-300 rounded-xl p-6 shadow-inner max-w-4xl mx-auto">
           <div className="font-heading font-semibold text-sm text-slate-900 mb-4 flex items-center gap-2">
