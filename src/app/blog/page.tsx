@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
-  BookOpen, 
   Clock, 
   ArrowRight, 
   ShieldCheck, 
@@ -158,101 +157,90 @@ export default function BlogPage() {
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 selection:bg-blue-600 selection:text-white">
-      {/* -------------------- 1. HERO SECTION -------------------- */}
-      <section className="relative bg-[#050b14] border-b border-slate-800/80 py-14 md:py-18 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent pointer-events-none" />
+    <div className="max-w-7xl mx-auto px-6 py-12 space-y-10 font-sans">
+      {/* Header Bar */}
+      <div className="border-b border-slate-200 pb-8">
+        <span className="text-[11px] font-bold text-blue-700 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded font-heading">
+          Trade Intelligence
+        </span>
+        <h1 className="font-heading font-semibold text-3xl text-slate-900 mt-2">
+          Export Agro Intelligence &amp; Sourcing Insights
+        </h1>
+        <p className="text-sm text-slate-500 mt-1">
+          Technical specifications, harvest cycle analyses, quality protocols, and port logistics for institutional buyers.
+        </p>
+      </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/50 px-3.5 py-1 text-xs font-semibold text-blue-300 backdrop-blur-sm mb-4">
-              <BookOpen className="w-3.5 h-3.5 text-blue-400" />
-              Trade Insights &amp; Market Intelligence
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-              Export Intelligence &amp; Agro Sourcing Insights
-            </h1>
-            <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
-              Technical guides, harvest cycle analysis, quality protocols, and port logistics for international buyers sourcing bulk Indian agricultural commodities.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* -------------------- 2. BLOG ARTICLES GRID -------------------- */}
-      <section className="py-16 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {DEFAULT_POSTS.map((post) => (
-              <article 
-                key={post.id}
-                className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl overflow-hidden flex flex-col justify-between transition-all duration-200 group relative"
-              >
-                <div>
-                  {post.image && (
-                    <div className="relative w-full h-48 bg-slate-800 overflow-hidden">
-                      <Image
-                        src={post.image}
-                        alt={post.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                  )}
-
-                  <div className="p-6 sm:p-8">
-                    <div className="flex items-center justify-between gap-3 text-xs mb-4">
-                      <span className="font-semibold text-emerald-400 uppercase tracking-wider bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-0.5 rounded">
-                        {post.category}
-                      </span>
-                      <span className="flex items-center gap-1.5 text-slate-400">
-                        <Clock className="w-3.5 h-3.5" />
-                        {post.readTime}
-                      </span>
-                    </div>
-
-                    <h2 className="text-lg sm:text-xl font-bold text-white group-hover:text-blue-400 transition-colors leading-snug mb-3">
-                      {post.title}
-                    </h2>
-
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                      {post.excerpt}
-                    </p>
-                  </div>
+      {/* Blog Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {DEFAULT_POSTS.map((post) => (
+          <article 
+            key={post.id}
+            className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col justify-between shadow-sm hover:border-slate-400 transition-colors relative"
+          >
+            <div>
+              {post.image && (
+                <div className="relative w-full h-52 bg-slate-100 border-b border-slate-100 overflow-hidden">
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
                 </div>
+              )}
 
-                <div className="px-6 pb-6 sm:px-8 sm:pb-8 pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    Published: {post.date}
+              <div className="p-6">
+                <div className="flex items-center justify-between gap-3 text-xs mb-3">
+                  <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-blue-50 text-blue-700 rounded font-heading">
+                    {post.category}
                   </span>
-                  <button
-                    onClick={() => setActivePost(post)}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors"
-                  >
-                    Read Full Briefing <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  <span className="flex items-center gap-1.5 text-slate-500 font-medium">
+                    <Clock className="w-3.5 h-3.5" />
+                    {post.readTime}
+                  </span>
                 </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* -------------------- 3. ARTICLE READER MODAL -------------------- */}
+                <h2 className="font-heading font-semibold text-lg text-slate-900 leading-snug mb-2 hover:text-blue-700 transition-colors">
+                  {post.title}
+                </h2>
+
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  {post.excerpt}
+                </p>
+              </div>
+            </div>
+
+            <div className="px-6 pb-6 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span className="text-[11px] text-slate-400 font-medium">
+                Published: {post.date}
+              </span>
+              <button
+                onClick={() => setActivePost(post)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:text-blue-900 transition-colors"
+              >
+                Read Full Briefing <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Reader Modal */}
       {activePost && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative shadow-2xl">
             <button
               onClick={() => setActivePost(null)}
-              className="absolute top-5 right-5 z-10 p-2 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+              className="absolute top-5 right-5 z-10 p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
             </button>
 
             {activePost.image && (
-              <div className="relative w-full h-56 sm:h-64 rounded-xl overflow-hidden mb-6 bg-slate-800">
+              <div className="relative w-full h-60 rounded-xl overflow-hidden mb-6 bg-slate-100 border border-slate-200">
                 <Image
                   src={activePost.image}
                   alt={activePost.title}
@@ -263,33 +251,33 @@ export default function BlogPage() {
             )}
 
             <div className="flex items-center gap-3 text-xs mb-3">
-              <span className="font-semibold text-emerald-400 uppercase tracking-wider bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-0.5 rounded">
+              <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-blue-50 text-blue-700 rounded font-heading">
                 {activePost.category}
               </span>
-              <span className="text-slate-400">• {activePost.readTime}</span>
-              <span className="text-slate-500">• {activePost.date}</span>
+              <span className="text-slate-500">• {activePost.readTime}</span>
+              <span className="text-slate-400">• {activePost.date}</span>
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight mb-6">
+            <h2 className="font-heading font-semibold text-2xl text-slate-900 leading-tight mb-6">
               {activePost.title}
             </h2>
 
-            <div className="space-y-6 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800 pt-6">
+            <div className="space-y-6 text-xs sm:text-sm text-slate-700 leading-relaxed border-t border-slate-200 pt-6">
               <p>{activePost.content.overview}</p>
 
               {activePost.content.keyPoints && activePost.content.keyPoints.length > 0 && (
-                <div className="bg-slate-950/80 border border-slate-800/80 rounded-xl p-5 space-y-4">
-                  <h3 className="font-bold text-white text-sm flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-blue-400" />
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
+                  <h3 className="font-heading font-semibold text-slate-900 text-sm flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-blue-700" />
                     {activePost.content.keyPointsTitle || 'Key Protocols:'}
                   </h3>
                   {activePost.content.keyPoints.map((item, idx) => (
                     <div key={idx} className="space-y-1">
-                      <div className="font-semibold text-white flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                      <div className="font-semibold text-slate-800 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
                         {item.heading}
                       </div>
-                      <p className="text-slate-400 text-xs pl-3.5 leading-relaxed">
+                      <p className="text-slate-600 text-xs pl-3.5 leading-relaxed">
                         {item.detail}
                       </p>
                     </div>
@@ -300,10 +288,10 @@ export default function BlogPage() {
               <p>{activePost.content.conclusion}</p>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4">
+            <div className="mt-8 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
               <Link
                 href="/request-quote"
-                className="inline-flex items-center gap-2 rounded-md bg-blue-600 hover:bg-blue-500 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition shadow-sm"
+                className="inline-flex items-center gap-2 rounded-md bg-blue-700 hover:bg-blue-800 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition shadow-sm"
               >
                 Request Quotation &rarr;
               </Link>
@@ -311,7 +299,7 @@ export default function BlogPage() {
                 href={`https://wa.me/${WHATSAPP_NUMBER}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-700 hover:text-emerald-800 transition"
               >
                 <PhoneCall className="w-4 h-4" />
                 Discuss Specifications on WhatsApp
@@ -321,19 +309,19 @@ export default function BlogPage() {
         </div>
       )}
 
-      {/* -------------------- 4. INQUIRY CTA -------------------- */}
-      <section className="py-16 bg-gradient-to-b from-slate-900 to-[#050b14] border-t border-slate-800 text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+      {/* Inquiry CTA Section */}
+      <section className="bg-slate-50 border border-slate-200 rounded-2xl p-8 sm:p-10 text-center">
+        <div className="max-w-2xl mx-auto space-y-3">
+          <h2 className="font-heading font-semibold text-2xl text-slate-900">
             Need Verified Commodity Testing Reports or Origin Quotations?
           </h2>
-          <p className="mt-3 text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
+          <p className="text-slate-600 text-xs sm:text-sm">
             Connect directly with GL Global’s commercial desk for container availability, APEDA / GAFTA lab certificates, and spot FOB/CIF pricing.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
+          <div className="pt-4 flex flex-wrap justify-center gap-4">
             <Link
               href="/request-quote"
-              className="rounded-md bg-blue-600 hover:bg-blue-500 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition"
+              className="rounded-md bg-blue-700 hover:bg-blue-800 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-sm transition"
             >
               Request Spot Quote
             </Link>
@@ -341,13 +329,13 @@ export default function BlogPage() {
               href={`https://wa.me/${WHATSAPP_NUMBER}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-md border border-slate-700 bg-slate-900/90 hover:bg-slate-800 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-emerald-400 transition"
+              className="rounded-md border border-slate-300 bg-white hover:bg-slate-100 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-800 transition shadow-sm"
             >
               Direct WhatsApp Trade Desk
             </a>
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
