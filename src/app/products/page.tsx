@@ -26,7 +26,8 @@ const INITIAL_PRODUCTS: Product[] = [
     moisture: '< 15%',
     packaging: 'Palletized & Stretch Wrapped (4,800 blocks/40ft HC)',
     fclCapacity: '40ft HC: 24 Metric Tons',
-    description: 'Triple-washed coconut coir substrate with Electrical Conductivity (EC) < 0.5 mS/cm and expansion ratio exceeding 1:15.'
+    description: 'Triple-washed coconut coir substrate with Electrical Conductivity (EC) < 0.5 mS/cm and expansion ratio exceeding 1:15.',
+    image: '/coco-peat-blocks.png'
   },
   {
     id: 'p2',
@@ -120,6 +121,7 @@ const INITIAL_PRODUCTS: Product[] = [
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
   const [adminPin, setAdminPin] = useState<string>('');
@@ -191,6 +193,18 @@ export default function ProductsPage() {
     }
   };
 
+  const filterTabs = [
+    { label: 'All Products', value: 'All' },
+    { label: 'Groundnuts', value: 'Groundnut' },
+    { label: 'Spices & Chilli', value: 'Spices' },
+    { label: 'Coconut', value: 'Coconut' },
+    { label: 'Coco Peat / Substrates', value: 'Substrate' }
+  ];
+
+  const filteredProducts = selectedCategory === 'All'
+    ? products
+    : products.filter((p) => p.category === selectedCategory);
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-10 font-sans">
       {/* Header Bar */}
@@ -235,6 +249,39 @@ export default function ProductsPage() {
             </button>
           )}
         </div>
+      </div>
+
+      {/* Product Filter Tabs */}
+      <div className="flex flex-wrap items-center gap-2 pb-2">
+        {filterTabs.map((tab) => {
+          const count = tab.value === 'All' 
+            ? products.length 
+            : products.filter((p) => p.category === tab.value).length;
+          const isActive = selectedCategory === tab.value;
+
+          return (
+            <button
+              key={tab.value}
+              onClick={() => setSelectedCategory(tab.value)}
+              className={`text-xs font-semibold px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
+                isActive
+                  ? 'bg-blue-700 text-white shadow-sm'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+              }`}
+            >
+              <span>{tab.label}</span>
+              <span
+                className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                  isActive
+                    ? 'bg-blue-800 text-white'
+                    : 'bg-slate-200 text-slate-700'
+                }`}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Admin Passcode Modal */}
@@ -403,7 +450,7 @@ export default function ProductsPage() {
 
       {/* Product Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {products.map((item) => (
+        {filteredProducts.map((item) => (
           <div
             key={item.id}
             className="bg-white border border-slate-200 rounded-xl overflow-hidden flex flex-col justify-between shadow-sm hover:border-slate-400 transition-colors relative"
