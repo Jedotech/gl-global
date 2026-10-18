@@ -161,7 +161,7 @@ const DEFAULT_POSTS: BlogPost[] = [
 
 export default function BlogPage() {
   const WHATSAPP_NUMBER = '919962023496';
-  const ADMIN_PIN = 'glglobal2026';
+  const ADMIN_PIN = 'admin123';
 
   const [posts, setPosts] = useState<BlogPost[]>(DEFAULT_POSTS);
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
@@ -555,7 +555,7 @@ export default function BlogPage() {
                 <Lock className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-white mb-1">Enter Admin PIN</h3>
-              <p className="text-xs text-slate-400 mb-4">Default authorization code: <span className="font-mono text-emerald-400">glglobal2026</span></p>
+              <p className="text-xs text-slate-400 mb-4">Default authorization code: <span className="font-mono text-emerald-400">admin123</span></p>
 
               <input
                 type="password"
