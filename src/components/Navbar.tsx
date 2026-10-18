@@ -17,7 +17,7 @@ export default function Navbar() {
         >
           <div className="relative w-9 h-9 flex-shrink-0 flex items-center justify-center rounded overflow-hidden">
             <Image
-              src="/favicon.ico"
+              src="/logo.jpeg"
               alt="GL Global Logo"
               width={36}
               height={36}
