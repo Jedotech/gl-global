@@ -101,6 +101,7 @@ export default function BlogPage() {
       category: 'Trade Logistics & Operations',
       readTime: '4 min read',
       date: 'October 2026',
+      image: '/blog-logistics-risk.png',
       excerpt: 'Why institutional agro-sourcing requires audited farm-gate networks, pre-stuffing digital surveillance, and transparent ICC Incoterms contracts across Chennai and Tuticorin gateways.',
       content: {
         overview: 'Cross-border agricultural trade between India and international destinations has historically suffered from structural opacity: sudden renegotiations during post-harvest price spikes, undisclosed tare weight deductions, and costly shipment hold-ups at Container Freight Stations (CFS).',
@@ -129,6 +130,7 @@ export default function BlogPage() {
       category: 'Technical Specifications',
       readTime: '5 min read',
       date: 'October 2026',
+      image: '/blog-turmeric-coconut.png',
       excerpt: 'Understanding the commercial benchmarks that dictate import pricing: Curcumin 3.0%+ finger grading from Salem/Erode and semi-husked coconut handling from Pollachi.',
       content: {
         overview: 'Industrial buyers of botanical raw materials and fresh horticulture require quantifiable grading benchmarks that protect their downstream processing yields. Variations in curcumin concentration or inner nut water retention directly impact production profitability.',
