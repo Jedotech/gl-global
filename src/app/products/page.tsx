@@ -104,7 +104,7 @@ const INITIAL_PRODUCTS: Product[] = [
     packaging: '5kg, 10kg, 25kg, 50kg BOPP / PP / Jute Bags',
     fclCapacity: '20ft FCL: 25 - 26 Metric Tons',
     description: 'Sortex-cleaned, premium-milled export grades: aromatic South Indian boiled Ponni, nutrient-rich red double-boiled Matta, high-volume parboiled IR64 long grain, and extra-long slender aged Basmati (average grain length > 8.35 mm).',
-    image: '/hero-banner.png'
+    image: '/rice-varieties.png'
   }
 ];
 
