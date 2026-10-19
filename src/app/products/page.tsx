@@ -8,7 +8,7 @@ import { ArrowRight } from 'lucide-react';
 interface Product {
   id: string;
   name: string;
-  category: 'Coconut' | 'Groundnut' | 'Spices' | 'Substrate';
+  category: 'Coconut' | 'Groundnut' | 'Spices' | 'Substrate' | 'Rice';
   grade: string;
   moisture: string;
   packaging: string;
@@ -94,6 +94,17 @@ const INITIAL_PRODUCTS: Product[] = [
     fclCapacity: '20ft FCL: 19 Metric Tons',
     description: 'Spherical pink-skinned kernels with high oil yield. Graded for confectioneries, peanut butter production, and direct snacking.',
     image: '/groundnut.png'
+  },
+  {
+    id: 'p8',
+    name: 'Indian Non-Basmati & Basmati Rice (Ponni, Matta, IR64 & Traditional Basmati)',
+    category: 'Rice',
+    grade: 'Thanjavur Ponni / Kerala Palakkadan Matta / IR64 Parboiled (5% Broken) / 1121 & Traditional Basmati',
+    moisture: '< 13.0% - 14.0% Max',
+    packaging: '5kg, 10kg, 25kg, 50kg BOPP / PP / Jute Bags',
+    fclCapacity: '20ft FCL: 25 - 26 Metric Tons',
+    description: 'Sortex-cleaned, premium-milled export grades: aromatic South Indian boiled Ponni, nutrient-rich red double-boiled Matta, high-volume parboiled IR64 long grain, and extra-long slender aged Basmati (average grain length > 8.35 mm).',
+    image: '/hero-banner.png'
   }
 ];
 
@@ -106,7 +117,8 @@ export default function ProductsPage() {
     { label: 'Groundnuts', value: 'Groundnut' },
     { label: 'Spices & Chilli', value: 'Spices' },
     { label: 'Coconut', value: 'Coconut' },
-    { label: 'Coco Peat / Substrates', value: 'Substrate' }
+    { label: 'Coco Peat / Substrates', value: 'Substrate' },
+    { label: 'Rice', value: 'Rice' }
   ];
 
   const filteredProducts = selectedCategory === 'All'
