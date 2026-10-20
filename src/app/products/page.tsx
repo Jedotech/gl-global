@@ -8,7 +8,7 @@ import { ArrowRight } from 'lucide-react';
 interface Product {
   id: string;
   name: string;
-  category: 'Coconut' | 'Groundnut' | 'Spices' | 'Substrate' | 'Rice';
+  category: 'Coconut' | 'Groundnut' | 'Spices' | 'Rice';
   grade: string;
   moisture: string;
   packaging: string;
@@ -18,17 +18,6 @@ interface Product {
 }
 
 const INITIAL_PRODUCTS: Product[] = [
-  {
-    id: 'p1',
-    name: 'Washed Low EC Coco Peat Blocks (5kg)',
-    category: 'Substrate',
-    grade: 'Horticultural Grade (Washed)',
-    moisture: '< 15%',
-    packaging: 'Palletized & Stretch Wrapped (4,800 blocks/40ft HC)',
-    fclCapacity: '40ft HC: 24 Metric Tons',
-    description: 'Triple-washed coconut coir substrate with Electrical Conductivity (EC) < 0.5 mS/cm and expansion ratio exceeding 1:15.',
-    image: '/coco-peat-blocks.png'
-  },
   {
     id: 'p2',
     name: 'Fresh Mature Semi-Husked Coconuts',
@@ -150,7 +139,6 @@ export default function ProductsPage() {
     { label: 'Groundnuts', value: 'Groundnut' },
     { label: 'Spices & Chilli', value: 'Spices' },
     { label: 'Coconut', value: 'Coconut' },
-    { label: 'Coco Peat / Substrates', value: 'Substrate' },
     { label: 'Rice', value: 'Rice' }
   ];
 
