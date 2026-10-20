@@ -97,13 +97,46 @@ const INITIAL_PRODUCTS: Product[] = [
   },
   {
     id: 'p8',
-    name: 'Indian Non-Basmati & Basmati Rice (Ponni, Matta, IR64 & Traditional Basmati)',
+    name: 'Thanjavur Ponni Boiled Rice',
     category: 'Rice',
-    grade: 'Thanjavur Ponni / Kerala Palakkadan Matta / IR64 Parboiled (5% Broken) / 1121 & Traditional Basmati',
-    moisture: '< 13.0% - 14.0% Max',
-    packaging: '5kg, 10kg, 25kg, 50kg BOPP / PP / Jute Bags',
+    grade: 'Single / Double Boiled (100% Sortex Cleaned)',
+    moisture: '< 13.0% Max',
+    packaging: '5kg, 10kg, 25kg, 50kg BOPP / PP Bags',
     fclCapacity: '20ft FCL: 25 - 26 Metric Tons',
-    description: 'Sortex-cleaned, premium-milled export grades: aromatic South Indian boiled Ponni, nutrient-rich red double-boiled Matta, high-volume parboiled IR64 long grain, and extra-long slender aged Basmati (average grain length > 8.35 mm).',
+    description: 'Fine slender non-sticky grain from the Cauvery delta basin. High elongation ratio upon cooking with distinctive light texture, ideal for everyday South Indian and international retail distribution.',
+    image: '/rice-varieties.png'
+  },
+  {
+    id: 'p9',
+    name: 'Palakkadan Matta Rice (Kerala Red Rice)',
+    category: 'Rice',
+    grade: 'Vadi Matta / Unda Matta (Double Boiled)',
+    moisture: '< 13.0% Max',
+    packaging: '5kg, 10kg, 25kg, 50kg BOPP / PP Bags',
+    fclCapacity: '20ft FCL: 25 Metric Tons',
+    description: 'Nutrient-rich, bold red parboiled grain retaining its natural outer bran layer. High in magnesium and dietary fiber, sourced directly from verified mills across Palakkad.',
+    image: '/rice-varieties.png'
+  },
+  {
+    id: 'p10',
+    name: 'IR64 Parboiled Rice (Long Grain)',
+    category: 'Rice',
+    grade: '5% Broken / Silky Sortex Polished',
+    moisture: '< 14.0% Max',
+    packaging: '25kg / 50kg PP Bags or Jute Bags',
+    fclCapacity: '20ft FCL: 26 Metric Tons',
+    description: 'High-volume commercial long-grain parboiled rice (average grain length 6.0 mm - 6.2 mm). Nil chalky grains, excellent firm texture, and well suited for large institutional catering and bulk African/Middle Eastern export.',
+    image: '/rice-varieties.png'
+  },
+  {
+    id: 'p11',
+    name: 'Traditional & 1121 Basmati Rice',
+    category: 'Rice',
+    grade: '1121 Steam / Sella / Raw (Aged 1-2 Years)',
+    moisture: '< 12.5% Max',
+    packaging: '5kg, 10kg, 20kg, 40kg Non-Woven Fabric / BOPP Bags',
+    fclCapacity: '20ft FCL: 25 Metric Tons',
+    description: 'Super-slender aromatic grain with extra-long length (AGL > 8.35 mm before cooking) expanding to over twice its length post-cooking. Certified pure cultivar with zero chemical residue, adhering to strict international adulteration thresholds.',
     image: '/rice-varieties.png'
   }
 ];
