@@ -104,7 +104,7 @@ const INITIAL_PRODUCTS: Product[] = [
     packaging: '5kg, 10kg, 25kg, 50kg BOPP / PP Bags',
     fclCapacity: '20ft FCL: 25 - 26 Metric Tons',
     description: 'Fine slender non-sticky grain from the Cauvery delta basin. High elongation ratio upon cooking with distinctive light texture, ideal for everyday South Indian and international retail distribution.',
-    image: '/rice-varieties.png'
+    image: '/rice-ponni.png'
   },
   {
     id: 'p9',
@@ -115,7 +115,7 @@ const INITIAL_PRODUCTS: Product[] = [
     packaging: '5kg, 10kg, 25kg, 50kg BOPP / PP Bags',
     fclCapacity: '20ft FCL: 25 Metric Tons',
     description: 'Nutrient-rich, bold red parboiled grain retaining its natural outer bran layer. High in magnesium and dietary fiber, sourced directly from verified mills across Palakkad.',
-    image: '/rice-varieties.png'
+    image: '/rice-matta.png'
   },
   {
     id: 'p10',
@@ -126,7 +126,7 @@ const INITIAL_PRODUCTS: Product[] = [
     packaging: '25kg / 50kg PP Bags or Jute Bags',
     fclCapacity: '20ft FCL: 26 Metric Tons',
     description: 'High-volume commercial long-grain parboiled rice (average grain length 6.0 mm - 6.2 mm). Nil chalky grains, excellent firm texture, and well suited for large institutional catering and bulk African/Middle Eastern export.',
-    image: '/rice-varieties.png'
+    image: '/rice-ir64.png'
   },
   {
     id: 'p11',
@@ -137,7 +137,7 @@ const INITIAL_PRODUCTS: Product[] = [
     packaging: '5kg, 10kg, 20kg, 40kg Non-Woven Fabric / BOPP Bags',
     fclCapacity: '20ft FCL: 25 Metric Tons',
     description: 'Super-slender aromatic grain with extra-long length (AGL > 8.35 mm before cooking) expanding to over twice its length post-cooking. Certified pure cultivar with zero chemical residue, adhering to strict international adulteration thresholds.',
-    image: '/rice-varieties.png'
+    image: '/rice-basmati.png'
   }
 ];
 
