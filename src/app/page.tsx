@@ -31,11 +31,11 @@ export default function Home() {
       image: "/redchilli.png",
     },
     {
-      title: "Raw Turmeric Fingers & Bulbs",
-      specs: "Salem & Nizamabad varieties, Curcumin 3.0%-5.0%, Moisture < 10%, Machine Polished",
-      origin: "Erode & Salem Hubs",
+      title: "Emperor Rice (Karuppu Kavuni Black Rice)",
+      specs: "Heritage Whole Grain, Anthocyanin-Rich, Moisture < 12.5%, Sortex Cleaned, Unpolished",
+      origin: "Tamil Nadu Cauvery Basin",
       href: "/products",
-      image: "/turmeric.png",
+      image: "/rice-varieties.png",
     },
     {
       title: "Semi-Husked Fresh Mature Coconuts",
