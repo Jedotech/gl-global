@@ -215,4 +215,62 @@ export default function ProductsPage() {
             <div>
               {/* Product Image Banner */}
               {item.image && (
-                <div className="relative w-full h-44 bg-slate-100 border-b border-slate
+                <div className="relative w-full h-44 bg-slate-100 border-b border-slate-100 overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+              )}
+
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-3">
+                  <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-slate-100 text-slate-700 rounded font-heading">
+                    {item.category}
+                  </span>
+                </div>
+
+                <h2 className="font-heading font-semibold text-base text-slate-900 mt-1">{item.name}</h2>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">{item.description}</p>
+
+                <div className="mt-5 pt-4 border-t border-slate-100 space-y-2 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Grade:</span>
+                    <span className="font-semibold text-slate-800 text-right">{item.grade}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Moisture:</span>
+                    <span className="font-semibold text-slate-800">{item.moisture}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Packaging:</span>
+                    <span className="font-semibold text-slate-800 text-right">{item.packaging}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Container Capacity:</span>
+                    <span className="font-bold text-blue-700">{item.fclCapacity}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Direct Link to /request-quote */}
+            <div className="p-6 pt-0">
+              <div className="pt-4 border-t border-slate-100">
+                <Link
+                  href={`/request-quote?product=${encodeURIComponent(item.name)}`}
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2.5 rounded text-center transition-colors flex items-center justify-center gap-1.5"
+                >
+                  Request for Quote <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
