@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Disables Turbopack from running the malformed candidate glob in production builds
-  turbopack: false,
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
