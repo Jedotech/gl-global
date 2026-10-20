@@ -35,7 +35,7 @@ export default function Home() {
       specs: "Heritage Whole Grain, Anthocyanin-Rich, Moisture < 12.5%, Sortex Cleaned, Unpolished",
       origin: "Tamil Nadu Cauvery Basin",
       href: "/products",
-      image: "/rice-varieties.png",
+      image: "/rice-karuppu-kavuni.png",
     },
     {
       title: "Semi-Husked Fresh Mature Coconuts",
