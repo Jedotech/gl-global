@@ -85,6 +85,17 @@ const INITIAL_PRODUCTS: Product[] = [
     image: '/groundnut.png'
   },
   {
+    id: 'p12',
+    name: 'Emperor Rice (Karuppu Kavuni Black Rice)',
+    category: 'Rice',
+    grade: 'Heritage Whole Grain (Sortex Cleaned, Unpolished)',
+    moisture: '< 12.5% Max',
+    packaging: '1kg, 5kg, 10kg, 25kg Vacuum or Food-Grade PP Bags',
+    fclCapacity: '20ft FCL: 24 - 25 Metric Tons',
+    description: 'Ancient heirloom black rice cultivated across Tamil Nadu’s fertile Cauvery basin. Packed with powerful anthocyanin antioxidants, high dietary fiber, and essential minerals with an authentic nutty aroma and firm texture.',
+    image: '/rice-karuppu-kavuni.png'
+  },
+  {
     id: 'p8',
     name: 'Thanjavur Ponni Boiled Rice',
     category: 'Rice',
@@ -127,17 +138,6 @@ const INITIAL_PRODUCTS: Product[] = [
     fclCapacity: '20ft FCL: 25 Metric Tons',
     description: 'Super-slender aromatic grain with extra-long length (AGL > 8.35 mm before cooking) expanding to over twice its length post-cooking. Certified pure cultivar with zero chemical residue, adhering to strict international adulteration thresholds.',
     image: '/rice-basmati.png'
-  },
-  {
-    id: 'p12',
-    name: 'Emperor Rice (Karuppu Kavuni Black Rice)',
-    category: 'Rice',
-    grade: 'Heritage Whole Grain (Sortex Cleaned, Unpolished)',
-    moisture: '< 12.5% Max',
-    packaging: '1kg, 5kg, 10kg, 25kg Vacuum or Food-Grade PP Bags',
-    fclCapacity: '20ft FCL: 24 - 25 Metric Tons',
-    description: 'Ancient heirloom black rice cultivated across Tamil Nadu’s fertile Cauvery basin. Packed with powerful anthocyanin antioxidants, high dietary fiber, and essential minerals with an authentic nutty aroma and firm texture.',
-    image: '/rice-karuppu-kavuni.png'
   }
 ];
 
