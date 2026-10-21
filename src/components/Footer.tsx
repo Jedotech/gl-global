@@ -35,12 +35,11 @@ export default function Footer() {
         <div>
           <div className="font-heading font-semibold text-white text-sm mb-3 uppercase tracking-wider">Products</div>
           <ul className="space-y-1.5 text-slate-400 text-[12px]">
-            <li>• <Link href="/products" className="hover:text-white transition-colors">Karuppu Kavuni Black Rice</Link></li>
-            <li>• <Link href="/products" className="hover:text-white transition-colors">Thanjavur Ponni &amp; Basmati Rice</Link></li>
-            <li>• <Link href="/products" className="hover:text-white transition-colors">Fresh Semi-Husked Coconuts</Link></li>
-            <li>• <Link href="/products" className="hover:text-white transition-colors">Bold &amp; Java Groundnut Kernels</Link></li>
-            <li>• <Link href="/products" className="hover:text-white transition-colors">Guntur Dried Whole Red Chillies</Link></li>
-            <li>• <Link href="/products" className="hover:text-white transition-colors">Salem Raw Turmeric &amp; Spices</Link></li>
+            <li>• <Link href="/products?category=Rice" className="hover:text-white transition-colors">Karuppu Kavuni Black Rice</Link></li>
+            <li>• <Link href="/products?category=Rice" className="hover:text-white transition-colors">Thanjavur Ponni &amp; Basmati Rice</Link></li>
+            <li>• <Link href="/products?category=Groundnut" className="hover:text-white transition-colors">Bold &amp; Java Groundnut Kernels</Link></li>
+            <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Guntur Dried Whole Red Chillies</Link></li>
+            <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Salem Raw Turmeric &amp; Spices</Link></li>
           </ul>
         </div>
 
