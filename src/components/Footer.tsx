@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <div className="relative w-8 h-8 flex-shrink-0 flex items-center justify-center rounded overflow-hidden">
               <Image
-                src="/favicon.ico"
+                src="/logo.jpeg"
                 alt="GL Global Logo"
                 width={32}
                 height={32}
@@ -35,21 +35,24 @@ export default function Footer() {
         <div>
           <div className="font-heading font-semibold text-white text-sm mb-3 uppercase tracking-wider">Products</div>
           <ul className="space-y-1.5 text-slate-400 text-[12px]">
-            <li>• Bold &amp; Java Graded Peanuts (Aflatoxin &lt;4 ppb)</li>
-            <li>• Washed Low EC Coco Peat Blocks (5kg)</li>
-            <li>• High Fat Desiccated Coconut Powder</li>
-            <li>• Virgin Cold-Pressed Coconut Oil</li>
+            <li>• <Link href="/products" className="hover:text-white transition-colors">Karuppu Kavuni Black Rice</Link></li>
+            <li>• <Link href="/products" className="hover:text-white transition-colors">Thanjavur Ponni &amp; Basmati Rice</Link></li>
+            <li>• <Link href="/products" className="hover:text-white transition-colors">Fresh Semi-Husked Coconuts</Link></li>
+            <li>• <Link href="/products" className="hover:text-white transition-colors">Bold &amp; Java Groundnut Kernels</Link></li>
+            <li>• <Link href="/products" className="hover:text-white transition-colors">Guntur Dried Whole Red Chillies</Link></li>
+            <li>• <Link href="/products" className="hover:text-white transition-colors">Salem Raw Turmeric &amp; Spices</Link></li>
           </ul>
         </div>
 
         <div>
           <div className="font-heading font-semibold text-white text-sm mb-3 uppercase tracking-wider">Navigation</div>
           <ul className="space-y-1.5 text-[12px]">
+            <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
             <li><Link href="/products" className="hover:text-white transition-colors">Products</Link></li>
-            <li><Link href="/services" className="hover:text-white transition-colors">Sourcing Services</Link></li>
-            <li><Link href="/quality" className="hover:text-white transition-colors">Quality Assurance</Link></li>
+            <li><Link href="/our-services" className="hover:text-white transition-colors">Our Services</Link></li>
+            <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+            <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
             <li><Link href="/request-quote" className="hover:text-white transition-colors">Request a Quote</Link></li>
-            <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
           </ul>
         </div>
 
