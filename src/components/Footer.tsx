@@ -39,7 +39,8 @@ export default function Footer() {
             <li>• <Link href="/products?category=Rice" className="hover:text-white transition-colors">Thanjavur Ponni &amp; Basmati Rice</Link></li>
             <li>• <Link href="/products?category=Groundnut" className="hover:text-white transition-colors">Bold &amp; Java Groundnut Kernels</Link></li>
             <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Whole Dried Red Chillies (Teja &amp; Sannam S4)</Link></li>
-            <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Salem Raw Turmeric &amp; Spices</Link></li>
+            <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Raw Turmeric Fingers &amp; Bulbs</Link></li>
+            <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Pure Ground Spices (Chilli, Turmeric &amp; Coriander Powders)</Link></li>
           </ul>
         </div>
 
