@@ -8,7 +8,7 @@ import { ArrowRight } from 'lucide-react';
 interface Product {
   id: string;
   name: string;
-  category: 'Coconut' | 'Groundnut' | 'Spices' | 'Rice';
+  category: 'Coconut' | 'Groundnut' | 'Spices' | 'Rice' | 'Cookware';
   grade: string;
   moisture: string;
   packaging: string;
@@ -138,6 +138,17 @@ const INITIAL_PRODUCTS: Product[] = [
     fclCapacity: '20ft FCL: 19 Metric Tons',
     description: 'Spherical pink-skinned kernels with high oil yield. Graded for confectioneries, peanut butter production, and direct snacking.',
     image: '/groundnut.png'
+  },
+  {
+    id: 'p13',
+    name: 'Traditional Handcrafted Clay Cookware (Earthen Pots & Pans)',
+    category: 'Cookware',
+    grade: '100% Natural River Clay, Kiln-Fired, Non-Toxic, Unglazed',
+    moisture: 'Dry Fired (Food-Grade Safe)',
+    packaging: 'Individual EPE Foam / Corrugated Sleeve, 5-Ply Export Master Cartons, Palletized',
+    fclCapacity: '20ft FCL: ~6,000 - 8,000 Pcs / 40ft HC: ~14,000 - 18,000 Pcs (Palletized)',
+    description: 'Authentic Indian clay cookware designed for traditional slow cooking. Porous clay retains heat and moisture, perfectly complementing heritage rice like Karuppu Kavuni. Free from lead and artificial coatings.',
+    image: '/clay-cookware.png'
   }
 ];
 
@@ -150,7 +161,8 @@ export default function ProductsPage() {
     { label: 'Rice', value: 'Rice' },
     { label: 'Groundnuts', value: 'Groundnut' },
     { label: 'Spices & Chilli', value: 'Spices' },
-    { label: 'Coconut', value: 'Coconut' }
+    { label: 'Coconut', value: 'Coconut' },
+    { label: 'Cookware', value: 'Cookware' }
   ];
 
   const filteredProducts = selectedCategory === 'All'
