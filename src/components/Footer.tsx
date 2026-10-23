@@ -41,6 +41,7 @@ export default function Footer() {
             <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Whole Dried Red Chillies (Teja &amp; Sannam S4)</Link></li>
             <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Raw Turmeric Fingers &amp; Bulbs</Link></li>
             <li>• <Link href="/products?category=Spices" className="hover:text-white transition-colors">Pure Ground Spices (Chilli, Turmeric &amp; Coriander Powders)</Link></li>
+            <li>• <Link href="/products?category=Cookware" className="hover:text-white transition-colors">Traditional Handcrafted Clay Cookware (Earthen Pots &amp; Pans)</Link></li>
           </ul>
         </div>
 
