@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="bg-slate-950 text-slate-400 font-sans text-[13px] leading-relaxed py-12 px-6 border-t border-slate-800">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="space-y-3">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="inline-flex items-center gap-3 group">
             <div className="relative w-8 h-8 flex-shrink-0 flex items-center justify-center rounded overflow-hidden">
               <Image
                 src="/logo.jpeg"
@@ -19,16 +19,16 @@ export default function Footer() {
               />
             </div>
             <div>
-              <div className="font-heading font-semibold text-lg text-white tracking-tight">GL Global</div>
+              <div className="font-heading font-semibold text-lg text-white tracking-tight group-hover:text-blue-400 transition-colors">GL Global</div>
               <div className="text-[11px] text-slate-400 font-sans tracking-normal">A brand of GL Exporters Pvt. Ltd.</div>
             </div>
-          </div>
+          </Link>
           <p className="text-slate-400 leading-relaxed text-[12px]">
             Registered agro-commodity sourcing agency and direct export office. Bridging overseas food manufacturers and horticultural buyers with vetted primary processing hubs across Southern India.
           </p>
           <div className="flex items-center gap-2 text-slate-400 text-[12px]">
             <Globe className="w-4 h-4 text-blue-400 shrink-0" />
-            <span>Official Portal: <strong className="text-white font-semibold">glglobal.in</strong></span>
+            <span>Official Portal: <Link href="/" className="text-white font-semibold hover:text-blue-400 transition-colors">glglobal.in</Link></span>
           </div>
         </div>
 
