@@ -166,11 +166,11 @@ export const onRequestPut = async (context: { request: Request; env: Env }) => {
     const itemId = body.item.id || `r_${Date.now()}`;
     const incoming: RateItem = { ...body.item, id: itemId };
 
-    // If a PDF file was uploaded, store binary in KV and auto-link labTestUrl
+    // If a PDF file was uploaded, store binary in KV and append unique timestamp to bypass browser cache
     if (body.pdfBase64) {
       const buffer = base64ToArrayBuffer(body.pdfBase64);
       await context.env.RATES_KV.put(`pdf_${itemId}`, buffer);
-      incoming.labTestUrl = `/api/rates/pdf?id=${encodeURIComponent(itemId)}`;
+      incoming.labTestUrl = `/api/rates/pdf?id=${encodeURIComponent(itemId)}&v=${Date.now()}`;
       incoming.labTestFileName = body.pdfFileName || 'Lab-Report.pdf';
     }
 

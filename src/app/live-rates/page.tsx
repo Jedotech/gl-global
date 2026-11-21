@@ -67,6 +67,32 @@ const CATEGORIES = [
   { label: 'Cookware', value: 'Cookware' },
 ];
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// Convert "22-Nov-2026" -> "2026-11-22" for <input type="date">
+function toInputDate(displayDate: string): string {
+  if (!displayDate) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(displayDate)) return displayDate;
+  const parts = displayDate.split('-');
+  if (parts.length !== 3) return '';
+  const [dd, mmm, yyyy] = parts;
+  const monthIdx = MONTHS.findIndex((m) => m.toLowerCase() === mmm.toLowerCase());
+  if (monthIdx === -1) return '';
+  const mm = String(monthIdx + 1).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd.padStart(2, '0')}`;
+}
+
+// Convert "2026-11-22" -> "22-Nov-2026" for display
+function toDisplayDate(isoDate: string): string {
+  if (!isoDate) return '';
+  const parts = isoDate.split('-');
+  if (parts.length !== 3) return isoDate;
+  const [yyyy, mm, dd] = parts;
+  const monthIdx = parseInt(mm, 10) - 1;
+  if (monthIdx < 0 || monthIdx > 11) return isoDate;
+  return `${dd.padStart(2, '0')}-${MONTHS[monthIdx]}-${yyyy}`;
+}
+
 export default function LiveRatesPage() {
   const [accessCode, setAccessCode] = useState('');
   const [rates, setRates] = useState<RateItem[] | null>(null);
@@ -144,7 +170,11 @@ export default function LiveRatesPage() {
   // Admin Handlers
   const openAddModal = () => {
     setAdminMessage('');
-    setEditingItem({ ...EMPTY_FORM });
+    const todayIso = new Date().toISOString().slice(0, 10);
+    setEditingItem({
+      ...EMPTY_FORM,
+      publishedOn: toDisplayDate(todayIso),
+    });
     setCertsInput('FSSAI licence, Spices Board registration, Food-safety certification, Halal certificate');
     setPdfBase64(null);
     setPdfFileName('');
@@ -778,28 +808,32 @@ export default function LiveRatesPage() {
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Published On *</label>
                 <input
-                  type="text"
+                  type="date"
                   required
-                  value={editingItem.publishedOn}
+                  value={toInputDate(editingItem.publishedOn)}
                   onChange={(e) =>
-                    setEditingItem({ ...editingItem, publishedOn: e.target.value })
+                    setEditingItem({
+                      ...editingItem,
+                      publishedOn: toDisplayDate(e.target.value),
+                    })
                   }
-                  placeholder="e.g. 22-Nov-2026"
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 bg-white"
                 />
               </div>
 
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Valid Through *</label>
                 <input
-                  type="text"
+                  type="date"
                   required
-                  value={editingItem.validThrough}
+                  value={toInputDate(editingItem.validThrough)}
                   onChange={(e) =>
-                    setEditingItem({ ...editingItem, validThrough: e.target.value })
+                    setEditingItem({
+                      ...editingItem,
+                      validThrough: toDisplayDate(e.target.value),
+                    })
                   }
-                  placeholder="e.g. 28-Nov-2026"
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 bg-white"
                 />
               </div>
 

@@ -1,5 +1,8 @@
 interface KVNamespace {
-  get(key: string, options?: { type?: 'text' | 'arrayBuffer' }): Promise<string | ArrayBuffer | null>;
+  get(
+    key: string,
+    options?: { type?: 'text' | 'arrayBuffer' }
+  ): Promise<string | ArrayBuffer | null>;
 }
 
 interface Env {
@@ -29,7 +32,7 @@ export const onRequestGet = async (context: { request: Request; env: Env }) => {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `inline; filename="GL-Global-Lab-Spec-${id}.pdf"`,
-      'Cache-Control': 'private, max-age=3600',
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
     },
   });
 };
