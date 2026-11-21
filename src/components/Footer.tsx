@@ -10,7 +10,7 @@ export default function Footer() {
           <Link href="/" className="inline-flex items-center gap-3 group">
             <div className="relative w-8 h-8 flex-shrink-0 flex items-center justify-center rounded overflow-hidden bg-white">
               <img
-                src="/logo.jpeg"
+                src="/logo.png"
                 alt="GL Global Logo"
                 width={32}
                 height={32}
