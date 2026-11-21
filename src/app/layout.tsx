@@ -1,23 +1,8 @@
 import type { Metadata } from 'next';
-import { Montserrat, Open_Sans } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppFloater from '@/components/WhatsAppFloater';
-
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['600', '700'],
-  variable: '--font-montserrat',
-  display: 'swap',
-});
-
-const openSans = Open_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-open-sans',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'GL Global | A brand of GL Exporters Pvt. Ltd. - Agricultural Sourcing & Export Office',
@@ -32,7 +17,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${montserrat.variable} ${openSans.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      style={
+        {
+          '--font-montserrat': "'Montserrat', sans-serif",
+          '--font-open-sans': "'Open Sans', sans-serif",
+        } as React.CSSProperties
+      }
+      suppressHydrationWarning
+    >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body
         suppressHydrationWarning
         className="font-sans antialiased min-h-screen bg-slate-50 text-slate-800 flex flex-col text-[15px] leading-relaxed"
