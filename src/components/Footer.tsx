@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Mail, Phone, MapPin, Globe, Shield } from 'lucide-react';
 
 export default function Footer() {
@@ -9,13 +8,13 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="space-y-3">
           <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="relative w-8 h-8 flex-shrink-0 flex items-center justify-center rounded overflow-hidden">
-              <Image
+            <div className="relative w-8 h-8 flex-shrink-0 flex items-center justify-center rounded overflow-hidden bg-white">
+              <img
                 src="/logo.jpeg"
                 alt="GL Global Logo"
                 width={32}
                 height={32}
-                className="object-contain"
+                className="w-8 h-8 object-contain"
               />
             </div>
             <div>
@@ -50,6 +49,7 @@ export default function Footer() {
           <ul className="space-y-1.5 text-[12px]">
             <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
             <li><Link href="/products" className="hover:text-white transition-colors">Products</Link></li>
+            <li><Link href="/live-rates" className="hover:text-white transition-colors text-emerald-400 font-medium">Live Rates</Link></li>
             <li><Link href="/our-services" className="hover:text-white transition-colors">Our Services</Link></li>
             <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
             <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
@@ -84,4 +84,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-}   
+}
