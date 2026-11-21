@@ -20,9 +20,10 @@ interface RateItem {
   moq: string;
   exFactoryUsd: number;
   gst: string;
-  packing: string;
+  packingLine1: string;
+  packingLine2: string;
   labTestUrl: string;
-  certificates: string;
+  certificates: string[];
   publishedOn: string;
   validThrough: string;
 }
@@ -38,10 +39,15 @@ const RATE_CATALOGUE: RateItem[] = [
     moq: '1 MT',
     exFactoryUsd: 3844.0,
     gst: '5% + Any added cost',
-    packing: 'Plain PP woven bag - (Non Printed)',
+    packingLine1: 'Plain PP woven bag -',
+    packingLine2: '(Non Printed)',
     labTestUrl: '#',
-    certificates:
-      'FSSAI licence, Spices Board registration, food-safety certification or Halal certificate.',
+    certificates: [
+      'FSSAI licence',
+      'Spices Board registration',
+      'Food-safety certification',
+      'Halal certificate',
+    ],
     publishedOn: '22-Nov-2026',
     validThrough: '28-Nov-2026',
   },
@@ -152,7 +158,7 @@ export default function LiveRatesPage() {
                 <th className="sticky left-0 z-20 bg-[#16325C] py-3 px-3.5 border-r border-slate-500 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.3)]">
                   Product
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-3 px-3 border-r border-slate-500 whitespace-nowrap">
                   HSN Code
                 </th>
                 <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
@@ -209,8 +215,8 @@ export default function LiveRatesPage() {
                     </td>
 
                     {/* HSN Code */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
-                      HS code: <span className="font-semibold">{item.hsnCode}</span>
+                    <td className="py-3 px-3 border-r border-slate-400 font-semibold tabular-nums whitespace-nowrap">
+                      {item.hsnCode}
                     </td>
 
                     {/* Variety / Origin */}
@@ -238,9 +244,10 @@ export default function LiveRatesPage() {
                       {item.gst}
                     </td>
 
-                    {/* Packing */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
-                      {item.packing}
+                    {/* Packing (Two Lines) */}
+                    <td className="py-3 px-3.5 border-r border-slate-400 leading-tight whitespace-nowrap">
+                      <div>{item.packingLine1}</div>
+                      <div>{item.packingLine2}</div>
                     </td>
 
                     {/* Lab Test PDF */}
@@ -256,9 +263,13 @@ export default function LiveRatesPage() {
                       </a>
                     </td>
 
-                    {/* Facility Certificates */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
-                      {item.certificates}
+                    {/* Facility Certificates (Stacked One Below Another) */}
+                    <td className="py-3 px-3.5 border-r border-slate-400 leading-snug whitespace-nowrap">
+                      <div className="flex flex-col items-center">
+                        {item.certificates.map((cert) => (
+                          <span key={cert}>{cert}</span>
+                        ))}
+                      </div>
                     </td>
 
                     {/* Published On */}
