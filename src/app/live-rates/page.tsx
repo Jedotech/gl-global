@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   CloudUpload,
@@ -8,6 +8,10 @@ import {
   AlertCircle,
   Search,
   ShieldCheck,
+  Lock,
+  KeyRound,
+  LogOut,
+  MessageSquare,
 } from 'lucide-react';
 
 interface RateItem {
@@ -28,31 +32,6 @@ interface RateItem {
   validThrough: string;
 }
 
-const RATE_CATALOGUE: RateItem[] = [
-  {
-    id: 'r1',
-    product: 'Red Chilli Whole',
-    category: 'Spices',
-    hsnCode: '09042110',
-    varietyOrigin: 'Guntur',
-    grade: 'BEST - Stemless',
-    moq: '1 MT',
-    exFactoryUsd: 3844.0,
-    gst: '5% + Any added cost',
-    packingLine1: 'Plain PP woven bag -',
-    packingLine2: '(Non Printed)',
-    labTestUrl: '#',
-    certificates: [
-      'FSSAI licence',
-      'Spices Board registration',
-      'Food-safety certification',
-      'Halal certificate',
-    ],
-    publishedOn: '22-Nov-2026',
-    validThrough: '28-Nov-2026',
-  },
-];
-
 const CATEGORIES = [
   { label: 'All Commodities', value: 'All' },
   { label: 'Spices & Chilli', value: 'Spices' },
@@ -63,10 +42,156 @@ const CATEGORIES = [
 ];
 
 export default function LiveRatesPage() {
+  const [accessCode, setAccessCode] = useState('');
+  const [rates, setRates] = useState<RateItem[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const filteredRates = RATE_CATALOGUE.filter((item) => {
+  const verifyCode = async (codeToVerify: string) => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/rates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessCode: codeToVerify }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        sessionStorage.removeItem('gl_buyer_code');
+        setRates(null);
+        setError(data.error || 'Access denied.');
+      } else {
+        sessionStorage.setItem('gl_buyer_code', codeToVerify.trim().toUpperCase());
+        setRates(data.rates);
+      }
+    } catch {
+      setError('Unable to verify access code. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const savedCode = sessionStorage.getItem('gl_buyer_code');
+    if (savedCode) {
+      setAccessCode(savedCode);
+      verifyCode(savedCode);
+    }
+  }, []);
+
+  const handleUnlock = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!accessCode.trim()) {
+      setError('Please enter your Buyer Access Code.');
+      return;
+    }
+    verifyCode(accessCode);
+  };
+
+  const handleLock = () => {
+    sessionStorage.removeItem('gl_buyer_code');
+    setRates(null);
+    setAccessCode('');
+    setError('');
+  };
+
+  // LOCKED VIEW (Shown to unauthenticated visitors & Indian suppliers)
+  if (!rates) {
+    return (
+      <div className="max-w-xl mx-auto px-4 sm:px-6 pt-16 pb-28 font-sans">
+        <div className="bg-white border border-slate-300 rounded-2xl p-8 shadow-sm space-y-6">
+          <div className="flex items-center justify-between">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#16325C] uppercase tracking-widest bg-sky-50 border border-sky-200 px-3 py-1 rounded font-heading">
+              <Lock className="w-3.5 h-3.5 text-[#16325C]" />
+              Verified Overseas Buyers Only
+            </span>
+            <span className="text-[11px] font-semibold text-slate-400">GL Global</span>
+          </div>
+
+          <div>
+            <h1 className="font-heading font-bold text-2xl text-slate-900 tracking-tight">
+              Indicative Export Rate Desk
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+              Live Ex-Factory (USD/MT) pricing and lab specification sheets are restricted to registered international buyers and import distributors.
+            </p>
+          </div>
+
+          <form onSubmit={handleUnlock} className="space-y-4">
+            <div>
+              <label
+                htmlFor="buyer-code"
+                className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5"
+              >
+                Enter Buyer Access Code
+              </label>
+              <div className="relative">
+                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  id="buyer-code"
+                  type="password"
+                  placeholder="e.g. GL-BUYER-XXXX"
+                  value={accessCode}
+                  onChange={(e) => setAccessCode(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 text-sm font-mono border border-slate-300 rounded-lg focus:outline-none focus:border-[#16325C] bg-slate-50"
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+
+            {error && (
+              <div className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#16325C] hover:bg-blue-800 disabled:opacity-60 text-white text-xs font-bold uppercase tracking-wider py-3 rounded-lg transition-colors shadow-sm"
+            >
+              {loading ? 'Verifying Credentials...' : 'Unlock Indicative Rate Sheet'}
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-slate-200 space-y-3">
+            <div className="text-xs font-semibold text-slate-800">
+              Don&apos;t have a Buyer Access Code yet?
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Submit your company details or message our export desk directly to receive your weekly buyer passcode.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+              <Link
+                href="/request-quote?subject=Request%20Buyer%20Rate%20Sheet%20Access"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2.5 px-4 rounded-lg transition-colors"
+              >
+                Request Access Code <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+              <a
+                href="https://wa.me/919962023496?text=Hello%20GL%20Global%2C%20we%20are%20an%20overseas%20buyer%20and%20would%20like%20to%20request%20an%20Access%20Code%20for%20your%20Live%20Rates%20catalogue."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 px-4 rounded-lg transition-colors"
+              >
+                <MessageSquare className="w-3.5 h-3.5" /> Request via WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // UNLOCKED VIEW (Only rendered after server validates Buyer Access Code)
+  const filteredRates = rates.filter((item) => {
     const matchesCategory =
       selectedCategory === 'All' || item.category === selectedCategory;
     const matchesSearch =
@@ -87,7 +212,7 @@ export default function LiveRatesPage() {
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 uppercase tracking-widest bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded font-heading">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                Weekly Export Desk
+                Verified Buyer Session
               </span>
               <span className="text-xs text-slate-400">GL Global | Direct Sourcing</span>
             </div>
@@ -100,16 +225,26 @@ export default function LiveRatesPage() {
             </p>
           </div>
 
-          {/* Search Filter */}
-          <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search product, HSN code, or origin..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-blue-700 bg-slate-50 transition-colors"
-            />
+          {/* Search Filter & Lock Button */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+            <div className="relative w-full sm:w-72">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search product, HSN code, or origin..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-blue-700 bg-slate-50 transition-colors"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleLock}
+              title="Lock Rate Sheet"
+              className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-red-700 bg-slate-100 hover:bg-red-50 border border-slate-200 px-3 py-2.5 rounded-lg transition-colors whitespace-nowrap"
+            >
+              <LogOut className="w-3.5 h-3.5" /> Lock
+            </button>
           </div>
         </div>
 
@@ -118,8 +253,8 @@ export default function LiveRatesPage() {
           {CATEGORIES.map((cat) => {
             const count =
               cat.value === 'All'
-                ? RATE_CATALOGUE.length
-                : RATE_CATALOGUE.filter((r) => r.category === cat.value).length;
+                ? rates.length
+                : rates.filter((r) => r.category === cat.value).length;
             const isActive = selectedCategory === cat.value;
 
             return (
@@ -155,45 +290,19 @@ export default function LiveRatesPage() {
           <table className="w-full table-auto text-center border-collapse">
             <thead>
               <tr className="bg-[#16325C] text-white text-[10px] font-heading font-bold tracking-tight leading-tight">
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Product
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  HSN Code
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Variety / Origin
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Grade
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  MOQ / Quantity Basis
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Ex-Factory (USD/MT)
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  GST
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Packing / Bag Weight
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Product PDF (LAB Test)
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Facility Certificates Available
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Published On
-                </th>
-                <th className="py-2.5 px-2 border-r border-slate-500">
-                  Valid Through
-                </th>
-                <th className="py-2.5 px-2">
-                  Reach Out
-                </th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Product</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">HSN Code</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Variety / Origin</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Grade</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">MOQ / Quantity Basis</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Ex-Factory (USD/MT)</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">GST</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Packing / Bag Weight</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Product PDF (LAB Test)</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Facility Certificates Available</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Published On</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Valid Through</th>
+                <th className="py-2.5 px-2">Reach Out</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-400 text-[10.5px]">
@@ -209,48 +318,31 @@ export default function LiveRatesPage() {
                     key={item.id}
                     className="group bg-[#D9EDF7] hover:bg-[#c8e5f5] transition-colors text-slate-900"
                   >
-                    {/* Product */}
                     <td className="py-2.5 px-2 border-r border-slate-400 font-bold text-[#16325C] whitespace-nowrap">
                       {item.product}
                     </td>
-
-                    {/* HSN Code */}
                     <td className="py-2.5 px-2 border-r border-slate-400 font-semibold tabular-nums whitespace-nowrap">
                       {item.hsnCode}
                     </td>
-
-                    {/* Variety / Origin */}
                     <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
                       {item.varietyOrigin}
                     </td>
-
-                    {/* Grade */}
                     <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
                       {item.grade}
                     </td>
-
-                    {/* MOQ */}
                     <td className="py-2.5 px-2 border-r border-slate-400 font-medium tabular-nums whitespace-nowrap">
                       {item.moq}
                     </td>
-
-                    {/* Cream/Gold Ex-Factory Price */}
                     <td className="py-2.5 px-2 border-r border-slate-400 bg-[#FFF2CC] group-hover:bg-[#ffecb3] font-bold text-slate-900 tabular-nums whitespace-nowrap">
                       {item.exFactoryUsd.toFixed(2)} USD
                     </td>
-
-                    {/* GST */}
                     <td className="py-2.5 px-2 border-r border-slate-400 leading-tight">
                       {item.gst}
                     </td>
-
-                    {/* Packing (Two Lines) */}
                     <td className="py-2.5 px-2 border-r border-slate-400 leading-tight whitespace-nowrap">
                       <div>{item.packingLine1}</div>
                       <div>{item.packingLine2}</div>
                     </td>
-
-                    {/* Lab Test PDF */}
                     <td className="py-2.5 px-2 border-r border-slate-400 text-center">
                       <a
                         href={item.labTestUrl}
@@ -262,8 +354,6 @@ export default function LiveRatesPage() {
                         <CloudUpload className="w-5 h-5 stroke-[2.2]" />
                       </a>
                     </td>
-
-                    {/* Facility Certificates (Stacked One Below Another) */}
                     <td className="py-2.5 px-2 border-r border-slate-400 leading-snug whitespace-nowrap">
                       <div className="flex flex-col items-center">
                         {item.certificates.map((cert) => (
@@ -271,18 +361,12 @@ export default function LiveRatesPage() {
                         ))}
                       </div>
                     </td>
-
-                    {/* Published On */}
                     <td className="py-2.5 px-2 border-r border-slate-400 whitespace-nowrap">
                       {item.publishedOn}
                     </td>
-
-                    {/* Valid Through */}
                     <td className="py-2.5 px-2 border-r border-slate-400 font-semibold whitespace-nowrap">
                       {item.validThrough}
                     </td>
-
-                    {/* Reach Out CTA */}
                     <td className="py-2.5 px-2 text-center whitespace-nowrap">
                       <Link
                         href={`/request-quote?product=${encodeURIComponent(
