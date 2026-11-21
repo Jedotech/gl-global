@@ -12,6 +12,12 @@ import {
   KeyRound,
   LogOut,
   MessageSquare,
+  Plus,
+  Pencil,
+  Trash2,
+  X,
+  Check,
+  FileText,
 } from 'lucide-react';
 
 interface RateItem {
@@ -27,10 +33,30 @@ interface RateItem {
   packingLine1: string;
   packingLine2: string;
   labTestUrl: string;
+  labTestFileName?: string;
   certificates: string[];
   publishedOn: string;
   validThrough: string;
 }
+
+const EMPTY_FORM: RateItem = {
+  id: '',
+  product: '',
+  category: 'Spices',
+  hsnCode: '',
+  varietyOrigin: '',
+  grade: '',
+  moq: '1 MT',
+  exFactoryUsd: 0,
+  gst: '5% + Any added cost',
+  packingLine1: 'Plain PP woven bag -',
+  packingLine2: '(Non Printed)',
+  labTestUrl: '#',
+  labTestFileName: '',
+  certificates: ['FSSAI licence', 'Spices Board registration'],
+  publishedOn: '',
+  validThrough: '',
+};
 
 const CATEGORIES = [
   { label: 'All Commodities', value: 'All' },
@@ -44,11 +70,21 @@ const CATEGORIES = [
 export default function LiveRatesPage() {
   const [accessCode, setAccessCode] = useState('');
   const [rates, setRates] = useState<RateItem[] | null>(null);
+  const [role, setRole] = useState<'buyer' | 'admin' | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  // Admin Modal State
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<RateItem>(EMPTY_FORM);
+  const [certsInput, setCertsInput] = useState('');
+  const [pdfBase64, setPdfBase64] = useState<string | null>(null);
+  const [pdfFileName, setPdfFileName] = useState<string>('');
+  const [saving, setSaving] = useState(false);
+  const [adminMessage, setAdminMessage] = useState('');
 
   const verifyCode = async (codeToVerify: string) => {
     setLoading(true);
@@ -65,10 +101,12 @@ export default function LiveRatesPage() {
       if (!res.ok) {
         sessionStorage.removeItem('gl_buyer_code');
         setRates(null);
+        setRole(null);
         setError(data.error || 'Access denied.');
       } else {
         sessionStorage.setItem('gl_buyer_code', codeToVerify.trim().toUpperCase());
         setRates(data.rates);
+        setRole(data.role || 'buyer');
       }
     } catch {
       setError('Unable to verify access code. Please check your connection and try again.');
@@ -88,7 +126,7 @@ export default function LiveRatesPage() {
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
     if (!accessCode.trim()) {
-      setError('Please enter your Buyer Access Code.');
+      setError('Please enter your Access Code.');
       return;
     }
     verifyCode(accessCode);
@@ -97,8 +135,122 @@ export default function LiveRatesPage() {
   const handleLock = () => {
     sessionStorage.removeItem('gl_buyer_code');
     setRates(null);
+    setRole(null);
     setAccessCode('');
     setError('');
+    setAdminMessage('');
+  };
+
+  // Admin Handlers
+  const openAddModal = () => {
+    setAdminMessage('');
+    setEditingItem({ ...EMPTY_FORM });
+    setCertsInput('FSSAI licence, Spices Board registration, Food-safety certification, Halal certificate');
+    setPdfBase64(null);
+    setPdfFileName('');
+    setEditorOpen(true);
+  };
+
+  const openEditModal = (item: RateItem) => {
+    setAdminMessage('');
+    setEditingItem({ ...item });
+    setCertsInput(item.certificates.join(', '));
+    setPdfBase64(null);
+    setPdfFileName(item.labTestFileName || '');
+    setEditorOpen(true);
+  };
+
+  const handlePdfSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      alert('Please select a valid PDF file (.pdf).');
+      e.target.value = '';
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert('PDF file size must be under 10 MB.');
+      e.target.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const base64Data = result.split(',')[1];
+      setPdfBase64(base64Data);
+      setPdfFileName(file.name);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSaveTemplate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setAdminMessage('');
+
+    const payloadItem: RateItem = {
+      ...editingItem,
+      exFactoryUsd: Number(editingItem.exFactoryUsd) || 0,
+      certificates: certsInput
+        .split(',')
+        .map((c) => c.trim())
+        .filter(Boolean),
+    };
+
+    try {
+      const res = await fetch('/api/rates', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          accessCode: sessionStorage.getItem('gl_buyer_code') || accessCode,
+          item: payloadItem,
+          pdfBase64,
+          pdfFileName,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAdminMessage(data.error || 'Failed to save rate.');
+      } else {
+        setRates(data.rates);
+        setEditorOpen(false);
+        setPdfBase64(null);
+        setAdminMessage('Rate catalogue and PDF updated successfully.');
+      }
+    } catch {
+      setAdminMessage('Network error while saving rate.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteTemplate = async (id: string, productName: string) => {
+    if (!window.confirm(`Delete "${productName}" from the Live Rates catalogue?`)) {
+      return;
+    }
+    setAdminMessage('');
+    try {
+      const res = await fetch('/api/rates', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          accessCode: sessionStorage.getItem('gl_buyer_code') || accessCode,
+          id,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAdminMessage(data.error || 'Failed to delete rate.');
+      } else {
+        setRates(data.rates);
+        setAdminMessage(`Removed "${productName}" from catalogue.`);
+      }
+    } catch {
+      setAdminMessage('Network error while deleting rate.');
+    }
   };
 
   // LOCKED VIEW (Shown to unauthenticated visitors)
@@ -190,7 +342,7 @@ export default function LiveRatesPage() {
     );
   }
 
-  // UNLOCKED VIEW (Only rendered after server validates Buyer Access Code)
+  // UNLOCKED VIEW
   const filteredRates = rates.filter((item) => {
     const matchesCategory =
       selectedCategory === 'All' || item.category === selectedCategory;
@@ -205,6 +357,40 @@ export default function LiveRatesPage() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-10 pb-28 space-y-6 font-sans">
+      {/* Admin Control Banner (Only visible when unlocked with ADMIN_ACCESS_CODE) */}
+      {role === 'admin' && (
+        <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="bg-amber-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded">
+              Admin Mode
+            </span>
+            <span className="text-xs font-medium text-amber-950">
+              Add, update, upload lab test PDFs, or remove commodity rate templates below.
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={openAddModal}
+            className="inline-flex items-center justify-center gap-1.5 bg-[#16325C] hover:bg-blue-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm shrink-0"
+          >
+            <Plus className="w-4 h-4" /> Add Rate Template
+          </button>
+        </div>
+      )}
+
+      {adminMessage && (
+        <div className="text-xs font-medium text-slate-800 bg-sky-50 border border-sky-200 rounded-lg px-4 py-2.5 flex items-center justify-between">
+          <span>{adminMessage}</span>
+          <button
+            type="button"
+            onClick={() => setAdminMessage('')}
+            className="text-slate-400 hover:text-slate-700"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Top Banner */}
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -212,7 +398,7 @@ export default function LiveRatesPage() {
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 uppercase tracking-widest bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded font-heading">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                Verified Buyer Session
+                {role === 'admin' ? 'Admin Control Session' : 'Verified Buyer Session'}
               </span>
               <span className="text-xs text-slate-400">GL Global | Direct Sourcing</span>
             </div>
@@ -302,14 +488,16 @@ export default function LiveRatesPage() {
                 <th className="py-2.5 px-2 border-r border-slate-500">Facility Certificates Available</th>
                 <th className="py-2.5 px-2 border-r border-slate-500">Published On</th>
                 <th className="py-2.5 px-2 border-r border-slate-500">Valid Through</th>
-                <th className="py-2.5 px-2">Reach Out</th>
+                <th className="py-2.5 px-2">
+                  {role === 'admin' ? 'Admin Actions' : 'Reach Out'}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-400 text-[10.5px]">
               {filteredRates.length === 0 ? (
                 <tr>
                   <td colSpan={13} className="py-10 text-center text-slate-500 text-sm">
-                    No matching commodities found for &ldquo;{searchQuery}&rdquo;.
+                    No matching commodities found.
                   </td>
                 </tr>
               ) : (
@@ -334,7 +522,7 @@ export default function LiveRatesPage() {
                       {item.moq}
                     </td>
                     <td className="py-2.5 px-2 border-r border-slate-400 bg-[#FFF2CC] group-hover:bg-[#ffecb3] font-bold text-slate-900 tabular-nums whitespace-nowrap">
-                      {item.exFactoryUsd.toFixed(2)} USD
+                      {Number(item.exFactoryUsd).toFixed(2)} USD
                     </td>
                     <td className="py-2.5 px-2 border-r border-slate-400 leading-tight">
                       {item.gst}
@@ -344,15 +532,24 @@ export default function LiveRatesPage() {
                       <div>{item.packingLine2}</div>
                     </td>
                     <td className="py-2.5 px-2 border-r border-slate-400 text-center">
-                      <a
-                        href={item.labTestUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="Download Lab Test & Spec Sheet"
-                        className="inline-flex items-center justify-center text-slate-900 hover:text-blue-700 transition-colors"
-                      >
-                        <CloudUpload className="w-5 h-5 stroke-[2.2]" />
-                      </a>
+                      {item.labTestUrl && item.labTestUrl !== '#' ? (
+                        <a
+                          href={item.labTestUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={item.labTestFileName || 'Open Lab Test PDF'}
+                          className="inline-flex items-center justify-center text-blue-700 hover:text-blue-900 transition-colors"
+                        >
+                          <CloudUpload className="w-5 h-5 stroke-[2.2]" />
+                        </a>
+                      ) : (
+                        <span
+                          title="Lab Test PDF not uploaded yet"
+                          className="inline-flex items-center justify-center text-slate-400 cursor-not-allowed"
+                        >
+                          <CloudUpload className="w-5 h-5 stroke-[2.2]" />
+                        </span>
+                      )}
                     </td>
                     <td className="py-2.5 px-2 border-r border-slate-400 leading-snug whitespace-nowrap">
                       <div className="flex flex-col items-center">
@@ -368,14 +565,35 @@ export default function LiveRatesPage() {
                       {item.validThrough}
                     </td>
                     <td className="py-2.5 px-2 text-center whitespace-nowrap">
-                      <Link
-                        href={`/request-quote?product=${encodeURIComponent(
-                          `${item.product} (${item.varietyOrigin} - ${item.grade})`
-                        )}`}
-                        className="inline-flex items-center gap-0.5 bg-[#16325C] hover:bg-blue-700 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded transition-colors whitespace-nowrap"
-                      >
-                        Contact Us <ArrowUpRight className="w-3 h-3" />
-                      </Link>
+                      {role === 'admin' ? (
+                        <div className="inline-flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => openEditModal(item)}
+                            title="Edit Rate Template"
+                            className="inline-flex items-center gap-1 bg-slate-800 hover:bg-blue-700 text-white text-[10px] font-semibold px-2 py-1 rounded transition-colors"
+                          >
+                            <Pencil className="w-3 h-3" /> Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteTemplate(item.id, item.product)}
+                            title="Delete Rate Template"
+                            className="inline-flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-[10px] font-semibold px-2 py-1 rounded transition-colors"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ) : (
+                        <Link
+                          href={`/request-quote?product=${encodeURIComponent(
+                            `${item.product} (${item.varietyOrigin} - ${item.grade})`
+                          )}`}
+                          className="inline-flex items-center gap-0.5 bg-[#16325C] hover:bg-blue-700 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded transition-colors whitespace-nowrap"
+                        >
+                          Contact Us <ArrowUpRight className="w-3 h-3" />
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -400,6 +618,256 @@ export default function LiveRatesPage() {
           Need FOB / CIF Chennai Port pricing? Request Custom Quote →
         </Link>
       </div>
+
+      {/* Admin Add / Edit Modal */}
+      {editorOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-300 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h2 className="font-heading font-bold text-lg text-[#16325C]">
+                {editingItem.id ? 'Update Cost Template' : 'Add New Cost Template'}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setEditorOpen(false)}
+                className="text-slate-400 hover:text-slate-700"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveTemplate} className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Product Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.product}
+                  onChange={(e) => setEditingItem({ ...editingItem, product: e.target.value })}
+                  placeholder="e.g. Red Chilli Whole"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Category *</label>
+                <select
+                  value={editingItem.category}
+                  onChange={(e) =>
+                    setEditingItem({
+                      ...editingItem,
+                      category: e.target.value as RateItem['category'],
+                    })
+                  }
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 bg-white"
+                >
+                  <option value="Spices">Spices</option>
+                  <option value="Rice">Rice</option>
+                  <option value="Groundnut">Groundnut</option>
+                  <option value="Coconut">Coconut</option>
+                  <option value="Cookware">Cookware</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">HSN Code *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.hsnCode}
+                  onChange={(e) => setEditingItem({ ...editingItem, hsnCode: e.target.value })}
+                  placeholder="e.g. 09042110"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Variety / Origin *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.varietyOrigin}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, varietyOrigin: e.target.value })
+                  }
+                  placeholder="e.g. Guntur"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Grade *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.grade}
+                  onChange={(e) => setEditingItem({ ...editingItem, grade: e.target.value })}
+                  placeholder="e.g. BEST - Stemless"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">MOQ / Quantity Basis *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.moq}
+                  onChange={(e) => setEditingItem({ ...editingItem, moq: e.target.value })}
+                  placeholder="e.g. 1 MT"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Ex-Factory Rate (USD/MT) *
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  value={editingItem.exFactoryUsd}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, exFactoryUsd: parseFloat(e.target.value) })
+                  }
+                  placeholder="e.g. 3844.00"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 bg-amber-50 font-semibold"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">GST *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.gst}
+                  onChange={(e) => setEditingItem({ ...editingItem, gst: e.target.value })}
+                  placeholder="e.g. 5% + Any added cost"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Packing Line 1 *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.packingLine1}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, packingLine1: e.target.value })
+                  }
+                  placeholder="e.g. Plain PP woven bag -"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Packing Line 2</label>
+                <input
+                  type="text"
+                  value={editingItem.packingLine2}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, packingLine2: e.target.value })
+                  }
+                  placeholder="e.g. (Non Printed)"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Published On *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.publishedOn}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, publishedOn: e.target.value })
+                  }
+                  placeholder="e.g. 22-Nov-2026"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Valid Through *</label>
+                <input
+                  type="text"
+                  required
+                  value={editingItem.validThrough}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, validThrough: e.target.value })
+                  }
+                  placeholder="e.g. 28-Nov-2026"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              {/* PDF Upload Box */}
+              <div className="sm:col-span-2 bg-slate-50 border border-dashed border-slate-300 rounded-xl p-4 space-y-2">
+                <label className="block font-bold text-slate-800">
+                  Product PDF (Lab Test / Specification Sheet)
+                </label>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <label className="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-sky-50 text-[#16325C] border border-slate-300 font-semibold px-3.5 py-2 rounded-lg cursor-pointer transition-colors shadow-2xs shrink-0">
+                    <CloudUpload className="w-4 h-4" />
+                    <span>{pdfFileName ? 'Replace PDF File' : 'Choose PDF File'}</span>
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      onChange={handlePdfSelect}
+                      className="hidden"
+                    />
+                  </label>
+                  <div className="text-[11px] text-slate-600 flex items-center gap-1.5 truncate">
+                    {pdfFileName ? (
+                      <>
+                        <FileText className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span className="font-semibold text-emerald-800 truncate">
+                          {pdfFileName}
+                        </span>
+                      </>
+                    ) : (
+                      <span>No PDF attached yet (Max 10 MB, .pdf format)</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block font-bold text-slate-700 mb-1">
+                  Facility Certificates (Comma-separated — renders one below another)
+                </label>
+                <input
+                  type="text"
+                  value={certsInput}
+                  onChange={(e) => setCertsInput(e.target.value)}
+                  placeholder="FSSAI licence, Spices Board registration, Food-safety certification, Halal certificate"
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div className="sm:col-span-2 flex justify-end gap-2.5 pt-3 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setEditorOpen(false)}
+                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg bg-[#16325C] hover:bg-blue-800 text-white font-semibold disabled:opacity-60"
+                >
+                  <Check className="w-4 h-4" />
+                  {saving ? 'Saving...' : 'Save Cost Template'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
