@@ -104,8 +104,8 @@ export default function LiveRatesPage() {
   // LOCKED VIEW (Shown to unauthenticated visitors)
   if (!rates) {
     return (
-      <div className="max-w-xl mx-auto px-4 sm:px-6 pt-16 pb-28 font-sans">
-        <div className="bg-white border border-slate-300 rounded-2xl p-8 shadow-sm space-y-6">
+      <div className="max-w-xl mx-auto px-4 sm:px-6 pt-4 pb-24 font-sans">
+        <div className="bg-white border border-slate-300 rounded-2xl p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#16325C] uppercase tracking-widest bg-sky-50 border border-sky-200 px-3 py-1 rounded font-heading">
               <Lock className="w-3.5 h-3.5 text-[#16325C]" />
@@ -118,12 +118,12 @@ export default function LiveRatesPage() {
             <h1 className="font-heading font-bold text-2xl text-slate-900 tracking-tight">
               Indicative Export Rate Desk
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
               Live Ex-Factory (USD/MT) pricing and lab specification sheets are restricted to registered national, international buyers and import distributors.
             </p>
           </div>
 
-          <form onSubmit={handleUnlock} className="space-y-4">
+          <form onSubmit={handleUnlock} className="space-y-3.5">
             <div>
               <label
                 htmlFor="buyer-code"
@@ -139,7 +139,7 @@ export default function LiveRatesPage() {
                   placeholder="Enter access code"
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 text-sm font-mono border border-slate-300 rounded-lg focus:outline-none focus:border-[#16325C] bg-slate-50"
+                  className="w-full pl-10 pr-4 py-2.5 text-sm font-mono border border-slate-300 rounded-lg focus:outline-none focus:border-[#16325C] bg-slate-50"
                   autoComplete="off"
                 />
               </div>
@@ -155,13 +155,13 @@ export default function LiveRatesPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#16325C] hover:bg-blue-800 disabled:opacity-60 text-white text-xs font-bold uppercase tracking-wider py-3 rounded-lg transition-colors shadow-sm"
+              className="w-full bg-[#16325C] hover:bg-blue-800 disabled:opacity-60 text-white text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors shadow-sm"
             >
               {loading ? 'Verifying Credentials...' : 'Unlock Indicative Rate Sheet'}
             </button>
           </form>
 
-          <div className="pt-4 border-t border-slate-200 space-y-3">
+          <div className="pt-3.5 border-t border-slate-200 space-y-2.5">
             <div className="text-xs font-semibold text-slate-800">
               Don&apos;t have a Buyer Access Code yet?
             </div>
