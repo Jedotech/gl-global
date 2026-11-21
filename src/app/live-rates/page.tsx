@@ -101,7 +101,7 @@ export default function LiveRatesPage() {
     setError('');
   };
 
-  // LOCKED VIEW (Shown to unauthenticated visitors & Indian suppliers)
+  // LOCKED VIEW (Shown to unauthenticated visitors)
   if (!rates) {
     return (
       <div className="max-w-xl mx-auto px-4 sm:px-6 pt-16 pb-28 font-sans">
@@ -109,7 +109,7 @@ export default function LiveRatesPage() {
           <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#16325C] uppercase tracking-widest bg-sky-50 border border-sky-200 px-3 py-1 rounded font-heading">
               <Lock className="w-3.5 h-3.5 text-[#16325C]" />
-              Verified Overseas Buyers Only
+              Verified Buyers Only
             </span>
             <span className="text-[11px] font-semibold text-slate-400">GL Global</span>
           </div>
@@ -119,7 +119,7 @@ export default function LiveRatesPage() {
               Indicative Export Rate Desk
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-              Live Ex-Factory (USD/MT) pricing and lab specification sheets are restricted to registered international buyers and import distributors.
+              Live Ex-Factory (USD/MT) pricing and lab specification sheets are restricted to registered national, international buyers and import distributors.
             </p>
           </div>
 
@@ -136,7 +136,7 @@ export default function LiveRatesPage() {
                 <input
                   id="buyer-code"
                   type="password"
-                  placeholder="e.g. GL-BUYER-XXXX"
+                  placeholder="Enter access code"
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 text-sm font-mono border border-slate-300 rounded-lg focus:outline-none focus:border-[#16325C] bg-slate-50"
@@ -176,7 +176,7 @@ export default function LiveRatesPage() {
                 Request Access Code <ArrowUpRight className="w-3.5 h-3.5" />
               </Link>
               <a
-                href="https://wa.me/919962023496?text=Hello%20GL%20Global%2C%20we%20are%20an%20overseas%20buyer%20and%20would%20like%20to%20request%20an%20Access%20Code%20for%20your%20Live%20Rates%20catalogue."
+                href="https://wa.me/919962023496?text=Hello%20GL%20Global%2C%20we%20are%20a%20buyer%20and%20would%20like%20to%20request%20an%20Access%20Code%20for%20your%20Live%20Rates%20catalogue."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 px-4 rounded-lg transition-colors"
