@@ -3,13 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  FileDown,
+  CloudUpload,
   ArrowUpRight,
   AlertCircle,
   Search,
   ShieldCheck,
-  Calendar,
-  CheckCircle2,
 } from 'lucide-react';
 
 interface RateItem {
@@ -24,7 +22,7 @@ interface RateItem {
   gst: string;
   packing: string;
   labTestUrl: string;
-  certificates: string[];
+  certificates: string;
   publishedOn: string;
   validThrough: string;
 }
@@ -40,9 +38,10 @@ const RATE_CATALOGUE: RateItem[] = [
     moq: '1 MT',
     exFactoryUsd: 3844.0,
     gst: '5% + Any added cost',
-    packing: 'Plain PP woven bag (Non-Printed)',
+    packing: 'Plain PP woven bag - (Non Printed)',
     labTestUrl: '#',
-    certificates: ['FSSAI', 'Spices Board', 'Food-Safety', 'Halal'],
+    certificates:
+      'FSSAI licence, Spices Board registration, food-safety certification or Halal certificate.',
     publishedOn: '22-Nov-2026',
     validThrough: '28-Nov-2026',
   },
@@ -72,13 +71,6 @@ export default function LiveRatesPage() {
 
     return matchesCategory && matchesSearch;
   });
-
-  const formatUsd = (amount: number) =>
-    new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-    }).format(amount);
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-10 pb-28 space-y-6 font-sans">
@@ -152,40 +144,56 @@ export default function LiveRatesPage() {
       </div>
 
       {/* Spreadsheet-Style Responsive Rate Table */}
-      <div className="bg-white border border-slate-300 rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-400 rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[1140px]">
+          <table className="w-full text-center border-collapse">
             <thead>
-              <tr className="bg-[#16325C] text-white text-[11px] font-heading uppercase tracking-wider">
-                <th className="sticky left-0 z-20 bg-[#16325C] py-3.5 px-4 border-r border-slate-700 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.3)]">
-                  Product &amp; HSN
+              <tr className="bg-[#16325C] text-white text-[11px] font-heading font-bold tracking-wide">
+                <th className="sticky left-0 z-20 bg-[#16325C] py-3 px-3.5 border-r border-slate-500 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.3)]">
+                  Product
                 </th>
-                <th className="py-3.5 px-3 border-r border-slate-700">Variety / Origin</th>
-                <th className="py-3.5 px-3 border-r border-slate-700">Grade</th>
-                <th className="py-3.5 px-3 border-r border-slate-700 text-right">
-                  MOQ Basis
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  HSN Code
                 </th>
-                <th className="py-3.5 px-4 border-r border-slate-700 bg-amber-600 text-white text-right">
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  Variety / Origin
+                </th>
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  Grade
+                </th>
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  MOQ / Quantity Basis
+                </th>
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
                   Ex-Factory (USD/MT)
                 </th>
-                <th className="py-3.5 px-3 border-r border-slate-700">GST</th>
-                <th className="py-3.5 px-3 border-r border-slate-700">Packing / Bag Weight</th>
-                <th className="py-3.5 px-3 border-r border-slate-700 text-center">
-                  Lab Spec
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  GST
                 </th>
-                <th className="py-3.5 px-3 border-r border-slate-700 w-56">
-                  Facility Certificates
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  Packing / Bag Weight
                 </th>
-                <th className="py-3.5 px-3 border-r border-slate-700">Rate Validity</th>
-                <th className="sticky right-0 z-20 bg-[#16325C] py-3.5 px-4 text-center shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.3)]">
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  Product PDF (LAB Test)
+                </th>
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  Facility Certificates Available
+                </th>
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  Published On
+                </th>
+                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                  Valid Through
+                </th>
+                <th className="sticky right-0 z-20 bg-[#16325C] py-3 px-3.5 whitespace-nowrap shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.3)]">
                   Reach Out
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 text-xs">
+            <tbody className="divide-y divide-slate-400 text-[11px]">
               {filteredRates.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="py-10 text-center text-slate-500 text-sm">
+                  <td colSpan={13} className="py-10 text-center text-slate-500 text-sm">
                     No matching commodities found for &ldquo;{searchQuery}&rdquo;.
                   </td>
                 </tr>
@@ -193,98 +201,83 @@ export default function LiveRatesPage() {
                 filteredRates.map((item) => (
                   <tr
                     key={item.id}
-                    className="group bg-white hover:bg-sky-50/70 transition-colors text-slate-800"
+                    className="group bg-[#D9EDF7] hover:bg-[#c8e5f5] transition-colors text-slate-900"
                   >
-                    {/* Sticky Product + HSN */}
-                    <td className="sticky left-0 z-10 bg-white group-hover:bg-sky-50/95 py-3.5 px-4 border-r border-slate-200 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.08)]">
-                      <div className="font-bold text-slate-900 text-[13px]">
-                        {item.product}
-                      </div>
-                      <div className="font-mono text-[11px] text-slate-500 mt-0.5">
-                        HSN: <span className="font-semibold text-slate-700">{item.hsnCode}</span>
-                      </div>
+                    {/* Sticky Product */}
+                    <td className="sticky left-0 z-10 bg-[#D9EDF7] group-hover:bg-[#c8e5f5] py-3 px-3.5 border-r border-slate-400 font-bold text-[#16325C] whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.08)]">
+                      {item.product}
+                    </td>
+
+                    {/* HSN Code */}
+                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
+                      HS code: <span className="font-semibold">{item.hsnCode}</span>
                     </td>
 
                     {/* Variety / Origin */}
-                    <td className="py-3.5 px-3 border-r border-slate-200 font-medium text-slate-800">
+                    <td className="py-3 px-3.5 border-r border-slate-400 font-medium whitespace-nowrap">
                       {item.varietyOrigin}
                     </td>
 
                     {/* Grade */}
-                    <td className="py-3.5 px-3 border-r border-slate-200 font-semibold text-slate-900">
+                    <td className="py-3 px-3.5 border-r border-slate-400 font-medium whitespace-nowrap">
                       {item.grade}
                     </td>
 
                     {/* MOQ */}
-                    <td className="py-3.5 px-3 border-r border-slate-200 font-semibold text-right tabular-nums whitespace-nowrap">
+                    <td className="py-3 px-3.5 border-r border-slate-400 font-medium tabular-nums whitespace-nowrap">
                       {item.moq}
                     </td>
 
-                    {/* Highlighted Price Column */}
-                    <td className="py-3.5 px-4 border-r border-slate-200 bg-amber-50/90 group-hover:bg-amber-100/80 font-bold text-amber-950 text-sm text-right tabular-nums whitespace-nowrap">
-                      {formatUsd(item.exFactoryUsd)}
-                      <span className="block text-[10px] font-medium text-amber-800">
-                        per Metric Ton
-                      </span>
+                    {/* Cream/Gold Ex-Factory Price */}
+                    <td className="py-3 px-3.5 border-r border-slate-400 bg-[#FFF2CC] group-hover:bg-[#ffecb3] font-bold text-slate-900 tabular-nums whitespace-nowrap">
+                      {item.exFactoryUsd.toFixed(2)} USD
                     </td>
 
                     {/* GST */}
-                    <td className="py-3.5 px-3 border-r border-slate-200 text-[11px] text-slate-700">
+                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
                       {item.gst}
                     </td>
 
                     {/* Packing */}
-                    <td className="py-3.5 px-3 border-r border-slate-200 text-[11px] text-slate-700">
+                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
                       {item.packing}
                     </td>
 
                     {/* Lab Test PDF */}
-                    <td className="py-3.5 px-3 border-r border-slate-200 text-center">
+                    <td className="py-3 px-3.5 border-r border-slate-400 text-center whitespace-nowrap">
                       <a
                         href={item.labTestUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Download Lab Test & Spec Sheet"
-                        className="inline-flex flex-col items-center justify-center text-blue-700 hover:text-blue-900 font-semibold gap-0.5 px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+                        className="inline-flex items-center justify-center text-slate-900 hover:text-blue-700 transition-colors"
                       >
-                        <FileDown className="w-4 h-4" />
-                        <span className="text-[10px]">Spec PDF</span>
+                        <CloudUpload className="w-6 h-6 stroke-[2.2]" />
                       </a>
                     </td>
 
-                    {/* Scannable Certificate Pills */}
-                    <td className="py-3.5 px-3 border-r border-slate-200">
-                      <div className="flex flex-wrap gap-1">
-                        {item.certificates.map((cert) => (
-                          <span
-                            key={cert}
-                            className="inline-flex items-center gap-1 text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md"
-                          >
-                            <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600 shrink-0" />
-                            {cert}
-                          </span>
-                        ))}
-                      </div>
+                    {/* Facility Certificates */}
+                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
+                      {item.certificates}
                     </td>
 
-                    {/* Combined Rate Validity */}
-                    <td className="py-3.5 px-3 border-r border-slate-200 whitespace-nowrap">
-                      <div className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
-                        <Calendar className="w-3 h-3 text-emerald-600" />
-                        Valid till {item.validThrough}
-                      </div>
-                      <div className="text-[10px] text-slate-500 mt-1">
-                        Published: {item.publishedOn}
-                      </div>
+                    {/* Published On */}
+                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
+                      {item.publishedOn}
                     </td>
 
-                    {/* Sticky Action CTA */}
-                    <td className="sticky right-0 z-10 bg-white group-hover:bg-sky-50/95 py-3.5 px-4 text-center whitespace-nowrap shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.08)]">
+                    {/* Valid Through */}
+                    <td className="py-3 px-3.5 border-r border-slate-400 font-semibold whitespace-nowrap">
+                      {item.validThrough}
+                    </td>
+
+                    {/* Sticky Reach Out CTA */}
+                    <td className="sticky right-0 z-10 bg-[#D9EDF7] group-hover:bg-[#c8e5f5] py-3 px-3.5 text-center whitespace-nowrap shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.08)]">
                       <Link
                         href={`/request-quote?product=${encodeURIComponent(
                           `${item.product} (${item.varietyOrigin} - ${item.grade})`
                         )}`}
-                        className="inline-flex items-center gap-1 bg-slate-900 hover:bg-blue-700 text-white text-[11px] font-semibold px-3.5 py-2 rounded-lg transition-colors shadow-sm"
+                        className="inline-flex items-center gap-1 bg-[#16325C] hover:bg-blue-700 text-white text-[11px] font-semibold px-3 py-1.5 rounded transition-colors whitespace-nowrap"
                       >
                         Contact Us <ArrowUpRight className="w-3.5 h-3.5" />
                       </Link>
