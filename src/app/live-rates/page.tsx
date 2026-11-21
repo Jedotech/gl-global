@@ -149,54 +149,54 @@ export default function LiveRatesPage() {
         </div>
       </div>
 
-      {/* Spreadsheet-Style Responsive Rate Table */}
+      {/* Spreadsheet-Style Fit-to-Page Rate Table */}
       <div className="bg-white border border-slate-400 rounded-xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-center border-collapse">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full table-auto text-center border-collapse">
             <thead>
-              <tr className="bg-[#16325C] text-white text-[11px] font-heading font-bold tracking-wide">
-                <th className="sticky left-0 z-20 bg-[#16325C] py-3 px-3.5 border-r border-slate-500 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.3)]">
+              <tr className="bg-[#16325C] text-white text-[10px] font-heading font-bold tracking-tight leading-tight">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Product
                 </th>
-                <th className="py-3 px-3 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   HSN Code
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Variety / Origin
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Grade
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   MOQ / Quantity Basis
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Ex-Factory (USD/MT)
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   GST
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Packing / Bag Weight
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Product PDF (LAB Test)
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Facility Certificates Available
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Published On
                 </th>
-                <th className="py-3 px-3.5 border-r border-slate-500 whitespace-nowrap">
+                <th className="py-2.5 px-2 border-r border-slate-500">
                   Valid Through
                 </th>
-                <th className="sticky right-0 z-20 bg-[#16325C] py-3 px-3.5 whitespace-nowrap shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.3)]">
+                <th className="py-2.5 px-2">
                   Reach Out
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-400 text-[11px]">
+            <tbody className="divide-y divide-slate-400 text-[10.5px]">
               {filteredRates.length === 0 ? (
                 <tr>
                   <td colSpan={13} className="py-10 text-center text-slate-500 text-sm">
@@ -209,49 +209,49 @@ export default function LiveRatesPage() {
                     key={item.id}
                     className="group bg-[#D9EDF7] hover:bg-[#c8e5f5] transition-colors text-slate-900"
                   >
-                    {/* Sticky Product */}
-                    <td className="sticky left-0 z-10 bg-[#D9EDF7] group-hover:bg-[#c8e5f5] py-3 px-3.5 border-r border-slate-400 font-bold text-[#16325C] whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.08)]">
+                    {/* Product */}
+                    <td className="py-2.5 px-2 border-r border-slate-400 font-bold text-[#16325C] whitespace-nowrap">
                       {item.product}
                     </td>
 
                     {/* HSN Code */}
-                    <td className="py-3 px-3 border-r border-slate-400 font-semibold tabular-nums whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 font-semibold tabular-nums whitespace-nowrap">
                       {item.hsnCode}
                     </td>
 
                     {/* Variety / Origin */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 font-medium whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
                       {item.varietyOrigin}
                     </td>
 
                     {/* Grade */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 font-medium whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
                       {item.grade}
                     </td>
 
                     {/* MOQ */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 font-medium tabular-nums whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 font-medium tabular-nums whitespace-nowrap">
                       {item.moq}
                     </td>
 
                     {/* Cream/Gold Ex-Factory Price */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 bg-[#FFF2CC] group-hover:bg-[#ffecb3] font-bold text-slate-900 tabular-nums whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 bg-[#FFF2CC] group-hover:bg-[#ffecb3] font-bold text-slate-900 tabular-nums whitespace-nowrap">
                       {item.exFactoryUsd.toFixed(2)} USD
                     </td>
 
                     {/* GST */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 leading-tight">
                       {item.gst}
                     </td>
 
                     {/* Packing (Two Lines) */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 leading-tight whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 leading-tight whitespace-nowrap">
                       <div>{item.packingLine1}</div>
                       <div>{item.packingLine2}</div>
                     </td>
 
                     {/* Lab Test PDF */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 text-center whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 text-center">
                       <a
                         href={item.labTestUrl}
                         target="_blank"
@@ -259,12 +259,12 @@ export default function LiveRatesPage() {
                         title="Download Lab Test & Spec Sheet"
                         className="inline-flex items-center justify-center text-slate-900 hover:text-blue-700 transition-colors"
                       >
-                        <CloudUpload className="w-6 h-6 stroke-[2.2]" />
+                        <CloudUpload className="w-5 h-5 stroke-[2.2]" />
                       </a>
                     </td>
 
                     {/* Facility Certificates (Stacked One Below Another) */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 leading-snug whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 leading-snug whitespace-nowrap">
                       <div className="flex flex-col items-center">
                         {item.certificates.map((cert) => (
                           <span key={cert}>{cert}</span>
@@ -273,24 +273,24 @@ export default function LiveRatesPage() {
                     </td>
 
                     {/* Published On */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 whitespace-nowrap">
                       {item.publishedOn}
                     </td>
 
                     {/* Valid Through */}
-                    <td className="py-3 px-3.5 border-r border-slate-400 font-semibold whitespace-nowrap">
+                    <td className="py-2.5 px-2 border-r border-slate-400 font-semibold whitespace-nowrap">
                       {item.validThrough}
                     </td>
 
-                    {/* Sticky Reach Out CTA */}
-                    <td className="sticky right-0 z-10 bg-[#D9EDF7] group-hover:bg-[#c8e5f5] py-3 px-3.5 text-center whitespace-nowrap shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.08)]">
+                    {/* Reach Out CTA */}
+                    <td className="py-2.5 px-2 text-center whitespace-nowrap">
                       <Link
                         href={`/request-quote?product=${encodeURIComponent(
                           `${item.product} (${item.varietyOrigin} - ${item.grade})`
                         )}`}
-                        className="inline-flex items-center gap-1 bg-[#16325C] hover:bg-blue-700 text-white text-[11px] font-semibold px-3 py-1.5 rounded transition-colors whitespace-nowrap"
+                        className="inline-flex items-center gap-0.5 bg-[#16325C] hover:bg-blue-700 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded transition-colors whitespace-nowrap"
                       >
-                        Contact Us <ArrowUpRight className="w-3.5 h-3.5" />
+                        Contact Us <ArrowUpRight className="w-3 h-3" />
                       </Link>
                     </td>
                   </tr>
