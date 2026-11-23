@@ -14,7 +14,7 @@ export interface RateItem {
   id: string;
   product: string;
   category: 'Spices' | 'Rice' | 'Groundnut' | 'Coconut' | 'Cookware';
-  hsnCode: string;
+  hsnCode?: string;
   varietyOrigin: string;
   grade: string;
   moq: string;
@@ -24,7 +24,7 @@ export interface RateItem {
   packingLine2: string;
   labTestUrl: string;
   labTestFileName?: string;
-  certificates: string[];
+  certificates?: string[];
   publishedOn: string;
   validThrough: string;
 }
@@ -55,6 +55,50 @@ const DEFAULT_RATES: RateItem[] = [
 ];
 
 const KV_KEY = 'live_rates_catalogue_v1';
+
+async function getLiveUsdToInr(): Promise<{ rate: number | null; date: string }> {
+  // Primary free FX source: open.er-api.com
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD', {
+      cf: { cacheTtl: 1800, cacheEverything: true },
+    } as RequestInit);
+    if (res.ok) {
+      const data = (await res.json()) as {
+        rates?: { INR?: number };
+        time_last_update_utc?: string;
+      };
+      if (data?.rates?.INR) {
+        const rawDate = data.time_last_update_utc
+          ? new Date(data.time_last_update_utc).toISOString().slice(0, 10)
+          : new Date().toISOString().slice(0, 10);
+        return { rate: Number(data.rates.INR), date: rawDate };
+      }
+    }
+  } catch {
+    // Fall through to secondary FX source
+  }
+
+  // Secondary free FX source: Frankfurter (ECB)
+  try {
+    const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=INR');
+    if (res.ok) {
+      const data = (await res.json()) as {
+        rates?: { INR?: number };
+        date?: string;
+      };
+      if (data?.rates?.INR) {
+        return {
+          rate: Number(data.rates.INR),
+          date: data.date || new Date().toISOString().slice(0, 10),
+        };
+      }
+    }
+  } catch {
+    // Ignore if unavailable
+  }
+
+  return { rate: null, date: '' };
+}
 
 async function getRates(env: Env): Promise<RateItem[]> {
   if (env.RATES_KV) {
@@ -96,7 +140,7 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
-// POST: Authenticate Buyer or Admin & Fetch Catalogue
+// POST: Authenticate Buyer or Admin & Fetch Catalogue + Live USD->INR Rate
 export const onRequestPost = async (context: { request: Request; env: Env }) => {
   try {
     const body = (await context.request.json()) as { accessCode?: string };
@@ -112,14 +156,26 @@ export const onRequestPost = async (context: { request: Request; env: Env }) => 
       );
     }
 
-    const rates = await getRates(context.env);
-    return new Response(JSON.stringify({ rates, role }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store, no-cache, must-revalidate',
-      },
-    });
+    const [rates, fx] = await Promise.all([
+      getRates(context.env),
+      getLiveUsdToInr(),
+    ]);
+
+    return new Response(
+      JSON.stringify({
+        rates,
+        role,
+        usdToInr: fx.rate,
+        fxDate: fx.date,
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+        },
+      }
+    );
   } catch {
     return new Response(
       JSON.stringify({ error: 'Invalid request payload.' }),
@@ -166,7 +222,6 @@ export const onRequestPut = async (context: { request: Request; env: Env }) => {
     const itemId = body.item.id || `r_${Date.now()}`;
     const incoming: RateItem = { ...body.item, id: itemId };
 
-    // If a PDF file was uploaded, store binary in KV and append unique timestamp to bypass browser cache
     if (body.pdfBase64) {
       const buffer = base64ToArrayBuffer(body.pdfBase64);
       await context.env.RATES_KV.put(`pdf_${itemId}`, buffer);
