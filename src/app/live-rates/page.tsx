@@ -18,6 +18,7 @@ import {
   X,
   Check,
   FileText,
+  RefreshCw,
 } from 'lucide-react';
 
 interface RateItem {
@@ -98,6 +99,11 @@ export default function LiveRatesPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Real-time USD -> INR Exchange Rate
+  const [usdToInr, setUsdToInr] = useState<number | null>(null);
+  const [fxUpdatedAt, setFxUpdatedAt] = useState<string>('');
+  const [fxLoading, setFxLoading] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -108,6 +114,24 @@ export default function LiveRatesPage() {
   const [pdfFileName, setPdfFileName] = useState<string>('');
   const [saving, setSaving] = useState(false);
   const [adminMessage, setAdminMessage] = useState('');
+
+  const fetchLiveUsdToInr = async () => {
+    setFxLoading(true);
+    try {
+      const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=INR');
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.rates?.INR) {
+          setUsdToInr(Number(data.rates.INR));
+          setFxUpdatedAt(data.date || '');
+        }
+      }
+    } catch {
+      // Fail silently if external FX API is unreachable
+    } finally {
+      setFxLoading(false);
+    }
+  };
 
   const verifyCode = async (codeToVerify: string) => {
     setLoading(true);
@@ -130,6 +154,7 @@ export default function LiveRatesPage() {
         sessionStorage.setItem('gl_buyer_code', codeToVerify.trim().toUpperCase());
         setRates(data.rates);
         setRole(data.role || 'buyer');
+        fetchLiveUsdToInr();
       }
     } catch {
       setError('Unable to verify access code. Please check your connection and try again.');
@@ -375,6 +400,15 @@ export default function LiveRatesPage() {
     return matchesCategory && matchesSearch;
   });
 
+  const formatInr = (usdAmount: number) => {
+    if (!usdToInr) return null;
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0,
+    }).format(usdAmount * usdToInr);
+  };
+
   return (
     <div className="max-w-[1440px] mx-auto px-4 sm:px-6 pt-10 pb-28 space-y-6 font-sans">
       {/* Admin Control Banner (Only visible when unlocked with ADMIN_ACCESS_CODE) */}
@@ -415,12 +449,29 @@ export default function LiveRatesPage() {
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 uppercase tracking-widest bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded font-heading">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
                 {role === 'admin' ? 'Admin Control Session' : 'Verified Buyer Session'}
               </span>
               <span className="text-xs text-slate-400">GL Global | Direct Sourcing</span>
+              {usdToInr && (
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#16325C] bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded tabular-nums">
+                  <span>Live FX: 1 USD = ₹{usdToInr.toFixed(2)} INR</span>
+                  {fxUpdatedAt && (
+                    <span className="text-[10px] text-slate-500">({fxUpdatedAt})</span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={fetchLiveUsdToInr}
+                    disabled={fxLoading}
+                    title="Refresh live USD to INR rate"
+                    className="text-blue-700 hover:text-blue-900 disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${fxLoading ? 'animate-spin' : ''}`} />
+                  </button>
+                </span>
+              )}
             </div>
             <h1 className="font-heading font-bold text-2xl sm:text-3xl text-slate-900 mt-2 tracking-tight">
               Product &amp; Indicative Rate Catalogue
@@ -519,92 +570,101 @@ export default function LiveRatesPage() {
                   </td>
                 </tr>
               ) : (
-                filteredRates.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="group bg-[#D9EDF7] hover:bg-[#c8e5f5] transition-colors text-slate-900"
-                  >
-                    <td className="py-2.5 px-2 border-r border-slate-400 font-bold text-[#16325C] whitespace-nowrap">
-                      {item.product}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
-                      {item.varietyOrigin}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
-                      {item.grade}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 font-medium tabular-nums whitespace-nowrap">
-                      {item.moq}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 bg-[#FFF2CC] group-hover:bg-[#ffecb3] font-bold text-slate-900 tabular-nums whitespace-nowrap">
-                      {Number(item.exFactoryUsd).toFixed(2)} USD
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 leading-tight">
-                      {item.gst}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 leading-tight whitespace-nowrap">
-                      <div>{item.packingLine1}</div>
-                      <div>{item.packingLine2}</div>
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 text-center">
-                      {item.labTestUrl && item.labTestUrl !== '#' ? (
-                        <a
-                          href={item.labTestUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title={item.labTestFileName || 'Open Product Spec / Sample COA'}
-                          className="inline-flex items-center justify-center text-blue-700 hover:text-blue-900 transition-colors"
-                        >
-                          <CloudUpload className="w-5 h-5 stroke-[2.2]" />
-                        </a>
-                      ) : (
-                        <span
-                          title="Product Spec / Sample COA not uploaded yet"
-                          className="inline-flex items-center justify-center text-slate-400 cursor-not-allowed"
-                        >
-                          <CloudUpload className="w-5 h-5 stroke-[2.2]" />
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 whitespace-nowrap">
-                      {item.publishedOn}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 font-semibold whitespace-nowrap">
-                      {item.validThrough}
-                    </td>
-                    <td className="py-2.5 px-2 text-center whitespace-nowrap">
-                      {role === 'admin' ? (
-                        <div className="inline-flex items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => openEditModal(item)}
-                            title="Edit Rate Template"
-                            className="inline-flex items-center gap-1 bg-slate-800 hover:bg-blue-700 text-white text-[10px] font-semibold px-2 py-1 rounded transition-colors"
+                filteredRates.map((item) => {
+                  const inrValue = formatInr(Number(item.exFactoryUsd));
+
+                  return (
+                    <tr
+                      key={item.id}
+                      className="group bg-[#D9EDF7] hover:bg-[#c8e5f5] transition-colors text-slate-900"
+                    >
+                      <td className="py-2.5 px-2 border-r border-slate-400 font-bold text-[#16325C] whitespace-nowrap">
+                        {item.product}
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
+                        {item.varietyOrigin}
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
+                        {item.grade}
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 font-medium tabular-nums whitespace-nowrap">
+                        {item.moq}
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 bg-[#FFF2CC] group-hover:bg-[#ffecb3] font-bold text-slate-900 tabular-nums whitespace-nowrap">
+                        <div>{Number(item.exFactoryUsd).toFixed(2)} USD</div>
+                        {inrValue && (
+                          <div className="text-[9.5px] font-semibold text-amber-900 mt-0.5">
+                            ≈ {inrValue} INR
+                          </div>
+                        )}
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 leading-tight">
+                        {item.gst}
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 leading-tight whitespace-nowrap">
+                        <div>{item.packingLine1}</div>
+                        <div>{item.packingLine2}</div>
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 text-center">
+                        {item.labTestUrl && item.labTestUrl !== '#' ? (
+                          <a
+                            href={item.labTestUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={item.labTestFileName || 'Open Product Spec / Sample COA'}
+                            className="inline-flex items-center justify-center text-blue-700 hover:text-blue-900 transition-colors"
                           >
-                            <Pencil className="w-3 h-3" /> Edit
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteTemplate(item.id, item.product)}
-                            title="Delete Rate Template"
-                            className="inline-flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-[10px] font-semibold px-2 py-1 rounded transition-colors"
+                            <CloudUpload className="w-5 h-5 stroke-[2.2]" />
+                          </a>
+                        ) : (
+                          <span
+                            title="Product Spec / Sample COA not uploaded yet"
+                            className="inline-flex items-center justify-center text-slate-400 cursor-not-allowed"
                           >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ) : (
-                        <Link
-                          href={`/request-quote?product=${encodeURIComponent(
-                            `${item.product} (${item.varietyOrigin} - ${item.grade})`
-                          )}`}
-                          className="inline-flex items-center gap-0.5 bg-[#16325C] hover:bg-blue-700 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded transition-colors whitespace-nowrap"
-                        >
-                          Contact Us <ArrowUpRight className="w-3 h-3" />
-                        </Link>
-                      )}
-                    </td>
-                  </tr>
-                ))
+                            <CloudUpload className="w-5 h-5 stroke-[2.2]" />
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 whitespace-nowrap">
+                        {item.publishedOn}
+                      </td>
+                      <td className="py-2.5 px-2 border-r border-slate-400 font-semibold whitespace-nowrap">
+                        {item.validThrough}
+                      </td>
+                      <td className="py-2.5 px-2 text-center whitespace-nowrap">
+                        {role === 'admin' ? (
+                          <div className="inline-flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => openEditModal(item)}
+                              title="Edit Rate Template"
+                              className="inline-flex items-center gap-1 bg-slate-800 hover:bg-blue-700 text-white text-[10px] font-semibold px-2 py-1 rounded transition-colors"
+                            >
+                              <Pencil className="w-3 h-3" /> Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteTemplate(item.id, item.product)}
+                              title="Delete Rate Template"
+                              className="inline-flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-[10px] font-semibold px-2 py-1 rounded transition-colors"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ) : (
+                          <Link
+                            href={`/request-quote?product=${encodeURIComponent(
+                              `${item.product} (${item.varietyOrigin} - ${item.grade})`
+                            )}`}
+                            className="inline-flex items-center gap-0.5 bg-[#16325C] hover:bg-blue-700 text-white text-[10px] font-semibold px-2.5 py-1.5 rounded transition-colors whitespace-nowrap"
+                          >
+                            Contact Us <ArrowUpRight className="w-3 h-3" />
+                          </Link>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
