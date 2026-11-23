@@ -24,7 +24,7 @@ interface RateItem {
   id: string;
   product: string;
   category: 'Spices' | 'Rice' | 'Groundnut' | 'Coconut' | 'Cookware';
-  hsnCode: string;
+  hsnCode?: string;
   varietyOrigin: string;
   grade: string;
   moq: string;
@@ -34,7 +34,7 @@ interface RateItem {
   packingLine2: string;
   labTestUrl: string;
   labTestFileName?: string;
-  certificates: string[];
+  certificates?: string[];
   publishedOn: string;
   validThrough: string;
 }
@@ -43,7 +43,6 @@ const EMPTY_FORM: RateItem = {
   id: '',
   product: '',
   category: 'Spices',
-  hsnCode: '',
   varietyOrigin: '',
   grade: '',
   moq: '1 MT',
@@ -53,7 +52,6 @@ const EMPTY_FORM: RateItem = {
   packingLine2: '(Non Printed)',
   labTestUrl: '#',
   labTestFileName: '',
-  certificates: ['FSSAI licence', 'Spices Board registration'],
   publishedOn: '',
   validThrough: '',
 };
@@ -106,7 +104,6 @@ export default function LiveRatesPage() {
   // Admin Modal State
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<RateItem>(EMPTY_FORM);
-  const [certsInput, setCertsInput] = useState('');
   const [pdfBase64, setPdfBase64] = useState<string | null>(null);
   const [pdfFileName, setPdfFileName] = useState<string>('');
   const [saving, setSaving] = useState(false);
@@ -175,7 +172,6 @@ export default function LiveRatesPage() {
       ...EMPTY_FORM,
       publishedOn: toDisplayDate(todayIso),
     });
-    setCertsInput('FSSAI licence, Spices Board registration, Food-safety certification, Halal certificate');
     setPdfBase64(null);
     setPdfFileName('');
     setEditorOpen(true);
@@ -184,7 +180,6 @@ export default function LiveRatesPage() {
   const openEditModal = (item: RateItem) => {
     setAdminMessage('');
     setEditingItem({ ...item });
-    setCertsInput(item.certificates.join(', '));
     setPdfBase64(null);
     setPdfFileName(item.labTestFileName || '');
     setEditorOpen(true);
@@ -224,10 +219,6 @@ export default function LiveRatesPage() {
     const payloadItem: RateItem = {
       ...editingItem,
       exFactoryUsd: Number(editingItem.exFactoryUsd) || 0,
-      certificates: certsInput
-        .split(',')
-        .map((c) => c.trim())
-        .filter(Boolean),
     };
 
     try {
@@ -378,7 +369,6 @@ export default function LiveRatesPage() {
       selectedCategory === 'All' || item.category === selectedCategory;
     const matchesSearch =
       item.product.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.hsnCode.includes(searchQuery) ||
       item.varietyOrigin.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.grade.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -447,7 +437,7 @@ export default function LiveRatesPage() {
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search product, HSN code, or origin..."
+                placeholder="Search product, origin, or spec..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-blue-700 bg-slate-50 transition-colors"
@@ -507,17 +497,15 @@ export default function LiveRatesPage() {
             <thead>
               <tr className="bg-[#16325C] text-white text-[10px] font-heading font-bold tracking-tight leading-tight">
                 <th className="py-2.5 px-2 border-r border-slate-500">Product</th>
-                <th className="py-2.5 px-2 border-r border-slate-500">HSN Code</th>
                 <th className="py-2.5 px-2 border-r border-slate-500">Variety / Origin</th>
-                <th className="py-2.5 px-2 border-r border-slate-500">Grade</th>
-                <th className="py-2.5 px-2 border-r border-slate-500">MOQ / Quantity Basis</th>
-                <th className="py-2.5 px-2 border-r border-slate-500">Ex-Factory (USD/MT)</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Grade / Key Spec</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">MOQ</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Ex-factory rate (USD/MT)</th>
                 <th className="py-2.5 px-2 border-r border-slate-500">GST</th>
                 <th className="py-2.5 px-2 border-r border-slate-500">Packing / Bag Weight</th>
-                <th className="py-2.5 px-2 border-r border-slate-500">Product PDF (LAB Test)</th>
-                <th className="py-2.5 px-2 border-r border-slate-500">Facility Certificates Available</th>
-                <th className="py-2.5 px-2 border-r border-slate-500">Published On</th>
-                <th className="py-2.5 px-2 border-r border-slate-500">Valid Through</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Product Spec / Sample COA.</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Last Updated</th>
+                <th className="py-2.5 px-2 border-r border-slate-500">Rate Valid Until</th>
                 <th className="py-2.5 px-2">
                   {role === 'admin' ? 'Admin Actions' : 'Reach Out'}
                 </th>
@@ -526,7 +514,7 @@ export default function LiveRatesPage() {
             <tbody className="divide-y divide-slate-400 text-[10.5px]">
               {filteredRates.length === 0 ? (
                 <tr>
-                  <td colSpan={13} className="py-10 text-center text-slate-500 text-sm">
+                  <td colSpan={11} className="py-10 text-center text-slate-500 text-sm">
                     No matching commodities found.
                   </td>
                 </tr>
@@ -538,9 +526,6 @@ export default function LiveRatesPage() {
                   >
                     <td className="py-2.5 px-2 border-r border-slate-400 font-bold text-[#16325C] whitespace-nowrap">
                       {item.product}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 font-semibold tabular-nums whitespace-nowrap">
-                      {item.hsnCode}
                     </td>
                     <td className="py-2.5 px-2 border-r border-slate-400 font-medium whitespace-nowrap">
                       {item.varietyOrigin}
@@ -567,26 +552,19 @@ export default function LiveRatesPage() {
                           href={item.labTestUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          title={item.labTestFileName || 'Open Lab Test PDF'}
+                          title={item.labTestFileName || 'Open Product Spec / Sample COA'}
                           className="inline-flex items-center justify-center text-blue-700 hover:text-blue-900 transition-colors"
                         >
                           <CloudUpload className="w-5 h-5 stroke-[2.2]" />
                         </a>
                       ) : (
                         <span
-                          title="Lab Test PDF not uploaded yet"
+                          title="Product Spec / Sample COA not uploaded yet"
                           className="inline-flex items-center justify-center text-slate-400 cursor-not-allowed"
                         >
                           <CloudUpload className="w-5 h-5 stroke-[2.2]" />
                         </span>
                       )}
-                    </td>
-                    <td className="py-2.5 px-2 border-r border-slate-400 leading-snug whitespace-nowrap">
-                      <div className="flex flex-col items-center">
-                        {item.certificates.map((cert) => (
-                          <span key={cert}>{cert}</span>
-                        ))}
-                      </div>
                     </td>
                     <td className="py-2.5 px-2 border-r border-slate-400 whitespace-nowrap">
                       {item.publishedOn}
@@ -632,6 +610,11 @@ export default function LiveRatesPage() {
           </table>
         </div>
       </div>
+
+      {/* Short Italic Disclaimer Note */}
+      <p className="text-xs italic text-slate-600 px-1">
+        Indicative ex-factory rates. GST is shown separately. Freight and delivery charges are excluded unless stated. Rates are subject to stock, specification, currency movement and final confirmation.
+      </p>
 
       {/* Compliance Footer Note */}
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-xl px-5 py-4">
@@ -700,18 +683,6 @@ export default function LiveRatesPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">HSN Code *</label>
-                <input
-                  type="text"
-                  required
-                  value={editingItem.hsnCode}
-                  onChange={(e) => setEditingItem({ ...editingItem, hsnCode: e.target.value })}
-                  placeholder="e.g. 09042110"
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
-                />
-              </div>
-
-              <div>
                 <label className="block font-bold text-slate-700 mb-1">Variety / Origin *</label>
                 <input
                   type="text"
@@ -726,7 +697,7 @@ export default function LiveRatesPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Grade *</label>
+                <label className="block font-bold text-slate-700 mb-1">Grade / Key Spec *</label>
                 <input
                   type="text"
                   required
@@ -738,7 +709,7 @@ export default function LiveRatesPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">MOQ / Quantity Basis *</label>
+                <label className="block font-bold text-slate-700 mb-1">MOQ *</label>
                 <input
                   type="text"
                   required
@@ -751,7 +722,7 @@ export default function LiveRatesPage() {
 
               <div>
                 <label className="block font-bold text-slate-700 mb-1">
-                  Ex-Factory Rate (USD/MT) *
+                  Ex-factory rate (USD/MT) *
                 </label>
                 <input
                   type="number"
@@ -806,7 +777,7 @@ export default function LiveRatesPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Published On *</label>
+                <label className="block font-bold text-slate-700 mb-1">Last Updated *</label>
                 <input
                   type="date"
                   required
@@ -822,7 +793,7 @@ export default function LiveRatesPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Valid Through *</label>
+                <label className="block font-bold text-slate-700 mb-1">Rate Valid Until *</label>
                 <input
                   type="date"
                   required
@@ -840,7 +811,7 @@ export default function LiveRatesPage() {
               {/* PDF Upload Box */}
               <div className="sm:col-span-2 bg-slate-50 border border-dashed border-slate-300 rounded-xl p-4 space-y-2">
                 <label className="block font-bold text-slate-800">
-                  Product PDF (Lab Test / Specification Sheet)
+                  Product Spec / Sample COA. (PDF)
                 </label>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                   <label className="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-sky-50 text-[#16325C] border border-slate-300 font-semibold px-3.5 py-2 rounded-lg cursor-pointer transition-colors shadow-2xs shrink-0">
@@ -866,19 +837,6 @@ export default function LiveRatesPage() {
                     )}
                   </div>
                 </div>
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block font-bold text-slate-700 mb-1">
-                  Facility Certificates (Comma-separated — renders one below another)
-                </label>
-                <input
-                  type="text"
-                  value={certsInput}
-                  onChange={(e) => setCertsInput(e.target.value)}
-                  placeholder="FSSAI licence, Spices Board registration, Food-safety certification, Halal certificate"
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2"
-                />
               </div>
 
               <div className="sm:col-span-2 flex justify-end gap-2.5 pt-3 border-t border-slate-200">
